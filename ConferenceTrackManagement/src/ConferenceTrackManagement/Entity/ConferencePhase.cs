@@ -9,15 +9,15 @@ namespace ConferenceTrackManagement.Entity
 {
     public class ConferencePhase
     {
-        public decimal TotalMinutes { get; private set; }
-        public decimal UsedMinutes => Slots.Sum(x => x.Duration);
-        public decimal RemainMinutes => TotalMinutes - UsedMinutes;
+        public decimal DesignedMinutes { get; private set; }
+        public decimal AssignedMinutes => Slots.Sum(x => x.Duration);
+        public decimal RemainedMinutes => DesignedMinutes - AssignedMinutes;
 
         public List<ConferenceSlot> Slots { get; private set; }
 
-        public ConferencePhase(decimal totalMinutes)
+        public ConferencePhase(decimal designedMinutes)
         {
-            TotalMinutes = totalMinutes;
+            DesignedMinutes = designedMinutes;
             Slots = new List<ConferenceSlot>();
         }
 
@@ -30,10 +30,15 @@ namespace ConferenceTrackManagement.Entity
             );
         }
 
+        public void ClearActivies()
+        {
+            Slots.Clear();
+        }
+
         public bool IsEnoughToAddActivity(Activity activity)
         {
             if (activity == null) return false;
-            return RemainMinutes >= activity.GetDuration();
+            return RemainedMinutes >= activity.GetDuration();
         }
     }
 }

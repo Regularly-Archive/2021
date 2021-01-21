@@ -5,9 +5,16 @@ using Xunit;
 namespace ConferenceTrackManagement.Test
 {
     using ConferenceTrackManagement.Entity;
+    using ConferenceTrackManagement.Common;
 
     public class ActivitySourceTest
     {
+        private ActivityParser _parser;
+        public ActivitySourceTest()
+        {
+            _parser = new ActivityParser();
+        }
+
         [Fact]
         public void ParseActivityWithMin()
         {
@@ -15,11 +22,14 @@ namespace ConferenceTrackManagement.Test
             var text = "Common Ruby Errors 45min";
 
             //Act
-            var activity = ParseActivity(text);
+            var activity = _parser.Parse(text);
 
             //Assert
             var expected = new Activity("Common Ruby Errors", new ActivityDuration(TimeUnit.Min, 45));
-            Assert.Equal(activity.ToString(), expected.ToString());
+            Assert.NotNull(activity);
+            Assert.Equal(activity.Subject, expected.Subject);
+            Assert.Equal(activity.Duration.Unit, expected.Duration.Unit);
+            Assert.Equal(activity.Duration.Value, expected.Duration.Value);
         }
 
         [Fact]
@@ -29,44 +39,24 @@ namespace ConferenceTrackManagement.Test
             var text = "Rails for Python Developers lightning";
 
             //Act
-            var activity = ParseActivity(text);
+            var activity = _parser.Parse(text);
 
             //Assert
             var expected = new Activity("Rails for Python Developers lightning", new ActivityDuration(TimeUnit.Lightning, 1));
-            Assert.Equal(activity.ToString(), expected.ToString());
+            Assert.NotNull(activity);
+            Assert.Equal(activity.Subject, expected.Subject);
+            Assert.Equal(activity.Duration.Unit, expected.Duration.Unit);
+            Assert.Equal(activity.Duration.Value, expected.Duration.Value);
         }
-
-        private TimeUnit ParseUnitOfSubject(string line)
+        
+        [Fact]
+        public void ParseActivityWithUnSupportedPattern()
         {
-            foreach (var unit in Enum.GetValues(typeof(TimeUnit)))
-            {
-                if (line.IndexOf(unit.ToString(), StringComparison.OrdinalIgnoreCase) > -1)
-                    return (TimeUnit)Enum.Parse(typeof(TimeUnit), unit.ToString());
-            }
+            //Arrange 
+            var text = "Common Ruby Errors 1Hour";
 
-            return TimeUnit.Min;
-        }
-
-        private Activity ParseActivity(string text)
-        {
-            var subject = text;
-            var duration = 1M;
-
-            var timeUnit = ParseUnitOfSubject(text);
-            
-            var numberIndex = -1;
-            var match = Regex.Match(text, @"(\d+){2}");
-            if (match.Success)
-                numberIndex = match.Index;
-
-            if (numberIndex != -1)
-            {
-                subject = text.Substring(0, numberIndex).Trim();
-                var lastIndex = text.LastIndexOf(timeUnit.ToString(), StringComparison.OrdinalIgnoreCase);
-                duration = decimal.Parse(text.Substring(numberIndex, lastIndex - numberIndex));
-            }
-
-            return new Activity(subject, new ActivityDuration(timeUnit, duration));
+            //Act & Assert
+            Assert.Throws<AcitivityParseException>(()=>_parser.Parse(text));
         }
     }
 }

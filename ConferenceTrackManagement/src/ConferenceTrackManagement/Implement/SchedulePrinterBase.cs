@@ -39,6 +39,9 @@ namespace ConferenceTrackManagement.Implement
 
         protected void RenderConferencePhase(ConferencePhase phase, int minutes, string timeSuffix)
         {
+            if (phase == null) 
+                return;
+                
             foreach (var slot in phase.Slots)
             {
                 var hour = minutes / 60;

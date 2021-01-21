@@ -9,10 +9,12 @@ namespace ConferenceTrackManagement.Implement
 {
     using ConferenceTrackManagement.Entity;
     using ConferenceTrackManagement.Abstract;
+    using ConferenceTrackManagement.Common;
 
     public class TextFileActivitySource : IActivitySource
     {
         private readonly string _filePath;
+        private readonly ActivityParser _parser = new ActivityParser();
 
         public TextFileActivitySource(string filePath)
         {
@@ -37,42 +39,8 @@ namespace ConferenceTrackManagement.Implement
                 if (string.IsNullOrEmpty(trimed))
                     continue; 
 
-                var activity = ParseActivity(trimed);
-                yield return activity;
+                yield return _parser.Parse(trimed);
             }
-        }
-
-        private TimeUnit ParseUnitOfSubject(string line)
-        {
-            foreach (var unit in Enum.GetValues(typeof(TimeUnit)))
-            {
-                if (line.IndexOf(unit.ToString(), StringComparison.OrdinalIgnoreCase) > -1)
-                    return (TimeUnit)Enum.Parse(typeof(TimeUnit), unit.ToString());
-            }
-
-            return TimeUnit.Min;
-        }
-
-        private Activity ParseActivity(string text)
-        {
-            var subject = text;
-            var duration = 1M;
-
-            var timeUnit = ParseUnitOfSubject(text);
-            
-            var numberIndex = -1;
-            var match = Regex.Match(text, @"(\d+){2}");
-            if (match.Success)
-                numberIndex = match.Index;
-
-            if (numberIndex != -1)
-            {
-                subject = text.Substring(0, numberIndex).Trim();
-                var lastIndex = text.LastIndexOf(timeUnit.ToString(), StringComparison.OrdinalIgnoreCase);
-                duration = decimal.Parse(text.Substring(numberIndex, lastIndex - numberIndex));
-            }
-
-            return new Activity(subject, new ActivityDuration(timeUnit, duration));
         }
     }
 }

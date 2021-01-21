@@ -22,7 +22,8 @@ namespace ConferenceTrackManagement
                 new TextFileActivitySource(inputFile),
                 new TextFileSchedulePrinter(outputFile)
             );
-
+            
+            //Build a 2 days schedule plan and then to arrange activities from IActivitySource.
             var schedules = ConferenceSchedule.Days(2);
             conferenceManager.Arrange(schedules);
             conferenceManager.Print(schedules);

@@ -13,16 +13,11 @@ namespace ConferenceTrackManagement.Entity
 
         public Activity(string subject, ActivityDuration duration)
         {
-            if (Regex.IsMatch(subject, "[0-9]+$"))
+            if (subject.IndexOfAny("0123456789".ToCharArray()) > 0)
                 throw new ArgumentException(nameof(subject));
 
             Subject = subject;
             Duration = duration;
-        }
-
-        public override string ToString()
-        {
-            return $"{Subject}({Duration.Value * (int)Duration.Unit}Min)";
         }
 
         public decimal GetDuration() => Duration.Value * (int)Duration.Unit;
