@@ -8,7 +8,7 @@ Generally, there are two projects for you to review:
 In order to compile and run these projects, it may requires you to prepare:
 
 * A `.NET Core` 3.0+ SDK
-* An IDE such as `Visual Studio` or `Visual Studio Core`
+* An IDE such as `Visual Studio` or `Visual Studio Code`
 
 When everything is ready, you can start your review in a simple way quickly as following: 
 ```Shell
@@ -36,7 +36,7 @@ conferenceManager.Print(schedules);
 # How it works
 It's my pleasure to have a brief introduction for you to explain the design of this solutions. 
 
-The key points I focu on is how to separate different responsibilities, so I designed the following key components: 
+The key points I focus on is how to separate different responsibilities, so I designed the following key components: 
 
 * `ConferenceManager` implements `IConferenceManager`, a high level component to arrange and print conference schedules.
 * `TextFileActivitySource` implements `IActivitySource`, a component to determine the way of activities to load.

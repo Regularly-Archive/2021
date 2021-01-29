@@ -14,7 +14,7 @@ namespace ConferenceTrackManagement
 
             /* 
                 ConferenceManager is a high-level component to arrange and print schedules.You can load activities 
-                from any type impments IActivitySource. TextFileActivitySource is default implemention what I provided
+                from any type implements IActivitySource. TextFileActivitySource is default implemention what I provided
                 in this app. To make different outputs with any type inherits from SchedulePrinterBase. TextFileSchedulePrinter 
                 and TerminalSchedulePrinter are available in this app.
             */

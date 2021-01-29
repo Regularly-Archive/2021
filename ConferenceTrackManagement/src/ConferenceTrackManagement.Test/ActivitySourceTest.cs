@@ -1,11 +1,10 @@
-using System;
-using System.Text.RegularExpressions;
 using Xunit;
 
 namespace ConferenceTrackManagement.Test
 {
     using ConferenceTrackManagement.Entity;
     using ConferenceTrackManagement.Common;
+    using ConferenceTrackManagement.Exceptions;
 
     public class ActivitySourceTest
     {

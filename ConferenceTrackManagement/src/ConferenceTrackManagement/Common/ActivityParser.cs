@@ -1,14 +1,14 @@
 using System;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Collections;
 
 namespace ConferenceTrackManagement.Common
 {
+    using ConferenceTrackManagement.Exceptions;
     using ConferenceTrackManagement.Entity;
 
     public class ActivityParser
     {
+        const string NUMBER_STRING = "0123456789";
+
         public Activity Parse(string text)
         {
             var subject = text;
@@ -16,7 +16,7 @@ namespace ConferenceTrackManagement.Common
 
             var timeUnit = ParseTimeUnitOfSubject(text);
             
-            var indexOfNum = text.IndexOfAny("0123456789".ToCharArray());
+            var indexOfNum = text.IndexOfAny(NUMBER_STRING.ToCharArray());
             if (indexOfNum != -1)
             {
                 subject = text.Substring(0, indexOfNum).Trim();

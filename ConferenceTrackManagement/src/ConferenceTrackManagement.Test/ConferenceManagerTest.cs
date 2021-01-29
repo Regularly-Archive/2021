@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
-using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using Xunit;
@@ -11,6 +9,7 @@ namespace ConferenceTrackManagement.Test
 {
     using ConferenceTrackManagement.Entity;
     using ConferenceTrackManagement.Common;
+    using ConferenceTrackManagement.Exceptions;
     using ConferenceTrackManagement.Abstract;
     using ConferenceTrackManagement.Implement;
 

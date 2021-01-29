@@ -1,9 +1,5 @@
 using System;
-using System.IO;
-using System.Text;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace ConferenceTrackManagement.Implement
@@ -11,6 +7,7 @@ namespace ConferenceTrackManagement.Implement
     using ConferenceTrackManagement.Entity;
     using ConferenceTrackManagement.Abstract;
     using ConferenceTrackManagement.Common;
+    using ConferenceTrackManagement.Exceptions;
 
     public class ConferenceManager : IConferenceManager
     {
