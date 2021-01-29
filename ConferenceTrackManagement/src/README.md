@@ -40,7 +40,7 @@ The key points I focus on is how to separate different responsibilities, so I de
 
 * `ConferenceManager` implements `IConferenceManager`, a high level component to arrange and print conference schedules.
 * `TextFileActivitySource` implements `IActivitySource`, a component to determine the way of activities to load.
-* `SchedulePrintBase` implements `ISchedulePrinter`, components to determine the output way of schedules.
+* `SchedulePrinterBase` implements `ISchedulePrinter`, components to determine the output way of schedules.
 * `TerminalSchedulePrinter` and `TextFileSchedulePrinter` inherit from `SchedulePrintBase`.
 * `ConferenceManager` depends on the abstracts of `IActivitySource` and `ISchedulePrinter`.
 
