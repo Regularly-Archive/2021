@@ -46,7 +46,7 @@ The key points I focus on is how to separate different responsibilities, so I de
 
 As you can see, I also draw a UML diagram to show the relations of different components:
 
-![ConferenceTrackManagement](https://i.loli.net/2021/01/21/TcoAU1NBquGFCnW.png)
+![ConferenceTrackManagement](./UML_Diagram.png)
 
 # How it be improved
 Scalability is also important for applications, what I consider is how to change the priority of activity. 
