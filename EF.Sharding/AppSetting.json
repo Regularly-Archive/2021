@@ -1,0 +1,15 @@
+﻿{
+  "Database": {
+    "Default": "Data Source=Chinook.db",
+    "MultiTenants": [
+      {
+        "tenantId": "01",
+        "ConnectionString": "Data Source=Chinook01.db"
+      },
+      {
+        "tenantId": "02",
+        "ConnectionString": "Data Source=Chinook02.db"
+      }
+    ]
+  }
+}
