@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "GRPC.Logging";
+
+package calculator;
+
+// The greeting service definition.
+service Calculator {
+  // Sends a greeting
+  rpc Calc (CalculatorRequest) returns (CalculatorReply);
+}
+
+// The request message containing the user's name.
+message CalculatorRequest {
+  int32 num1 = 1;
+  string op = 2;
+  int32 num2 = 3;
+}
+
+// The response message containing the greetings.
+message CalculatorReply {
+  string exp = 1;
+  int32 result = 2;
+}

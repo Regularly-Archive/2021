@@ -1,0 +1,21 @@
+﻿version: '1'
+services:
+  web:
+    image: grpc-logging
+    ports:
+      - 8001:5001
+    networks:
+      - back-tier
+
+  redis:
+    image: redis
+    links:
+      - web
+    networks:
+      - back-tier 
+
+networks:
+  front-tier:
+    driver: bridge
+  back-tier:
+driver: bridge
