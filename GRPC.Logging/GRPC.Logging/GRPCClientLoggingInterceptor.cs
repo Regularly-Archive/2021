@@ -9,7 +9,7 @@ using System.Text;
 
 namespace GRPC.Logging
 {
-    public class GRPCClientLoggingInterceptor : Interceptor
+    public class GrpcClientLoggingInterceptor : Interceptor
     {
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(
             TRequest request,

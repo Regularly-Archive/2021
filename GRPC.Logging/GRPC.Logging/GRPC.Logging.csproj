@@ -1,9 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>53b9dd1a-5ee8-4043-83aa-00707cd779f2</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
@@ -14,13 +13,26 @@
   <ItemGroup>
     <Protobuf Include="Protos\greet.proto" GrpcServices="Both" />
 	<Protobuf Include="Protos\calculator.proto" GrpcServices="Both" />
+    <Protobuf Include="Protos\healthCheck.proto" GrpcServices="Both" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Consul" Version="1.6.10.1" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
+    <PackageReference Include="Grpc.HealthCheck" Version="2.38.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Winton.Extensions.Configuration.Consul" Version="3.1.1" />
     <!--<PackageReference Include="PostSharp" Version="6.9.5" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Protos\healthCheck.proto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

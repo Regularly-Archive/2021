@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace GRPC.Logging
 {
-    public class GRPCServerLoggingInterceptor : Interceptor
+    public class GrpcServerLoggingInterceptor : Interceptor
     {
-        private readonly ILogger<GRPCServerLoggingInterceptor> _logger;
-        public GRPCServerLoggingInterceptor(ILogger<GRPCServerLoggingInterceptor> logger)
+        private readonly ILogger<GrpcServerLoggingInterceptor> _logger;
+        public GrpcServerLoggingInterceptor(ILogger<GrpcServerLoggingInterceptor> logger)
         {
             _logger = logger;
         }
