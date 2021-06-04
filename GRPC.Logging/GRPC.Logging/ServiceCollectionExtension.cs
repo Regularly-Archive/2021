@@ -55,7 +55,7 @@ namespace GRPC.Logging
                     Timeout = TimeSpan.FromSeconds(5)
                 },
                 Tags = new string[] { "gRpc" }
-            }) ;
+            });
         }
 
         private static string GetLocalIP()
@@ -90,7 +90,29 @@ namespace GRPC.Logging
 
             var clientInstance = (TGrpcClient)constructorInfo.Invoke(new object[] { channel });
             return clientInstance;
+        }
 
+        public static Task<TGrpcClient> GetGrpcClientAsync<TGrpcClient>(this IServiceProvider serviceProvider, string baseUrl)
+        {
+            var serviceUrl = baseUrl;
+            var channel = GrpcChannel.ForAddress($"https://{serviceUrl}");
+            var constructorInfo = typeof(TGrpcClient).GetConstructor(new Type[] { typeof(GrpcChannel) });
+            if (constructorInfo == null)
+                throw new Exception($"Please make sure {typeof(TGrpcClient).Name} is a gRpc client");
+
+            var clientInstance = (TGrpcClient)constructorInfo.Invoke(new object[] { channel });
+            return Task.FromResult(clientInstance);
+        }
+
+        public static Task<TGrpcClient> GetGrpcClientAsync<TGrpcClient>(this IServiceProvider serviceProvider, Func<GrpcChannel> configure)
+        {
+            var channel = configure();
+            var constructorInfo = typeof(TGrpcClient).GetConstructor(new Type[] { typeof(GrpcChannel) });
+            if (constructorInfo == null)
+                throw new Exception($"Please make sure {typeof(TGrpcClient).Name} is a gRpc client");
+
+            var clientInstance = (TGrpcClient)constructorInfo.Invoke(new object[] { channel });
+            return Task.FromResult(clientInstance);
         }
     }
 }

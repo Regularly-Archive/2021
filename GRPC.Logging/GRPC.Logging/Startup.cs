@@ -30,9 +30,12 @@ namespace GRPC.Logging
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc(options => options.Interceptors.Add<GrpcServerLoggingInterceptor>());
+
             services.AddHostedService<HostedHealthCheckService>();
+
             services.AddGrpcHealthCheck<GreeterService>();
             services.AddGrpcHealthCheck<CalculatorService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
