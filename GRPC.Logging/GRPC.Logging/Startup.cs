@@ -30,7 +30,7 @@ namespace GRPC.Logging
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc(options => options.Interceptors.Add<GrpcServerLoggingInterceptor>());
-            //services.AddHostedService<HostedHealthCheckService>();
+            services.AddHostedService<HostedHealthCheckService>();
             services.AddGrpcHealthCheck<GreeterService>();
             services.AddGrpcHealthCheck<CalculatorService>();
         }

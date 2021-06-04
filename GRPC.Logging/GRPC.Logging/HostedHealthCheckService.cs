@@ -36,9 +36,9 @@ namespace GRPC.Logging
 
         private void DoCheck(object state)
         {
-            using var channel = GrpcChannel.ForAddress("https://localhost:5001"); ;
+            using var channel = GrpcChannel.ForAddress("https://localhost:8001"); ;
             var client = new Health.HealthClient(channel);
-            client.Check(new HealthCheckRequest() { Service = "https://localhost:5001" });
+            client.Check(new HealthCheckRequest() { Service = "https://localhost:8001" });
         }
     }
 }

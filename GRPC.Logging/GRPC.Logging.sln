@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GRPC.Logging", "GRPC.Loggin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GRPC.Logging.Client", "GRPC.Logging.Client\GRPC.Logging.Client.csproj", "{B12FC21F-489D-4DE1-A8CC-DA97574E4292}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grpc.Api", "Grpc.Api\Grpc.Api.csproj", "{EBD0633C-2E9D-4DB1-968C-2C962162C287}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{B12FC21F-489D-4DE1-A8CC-DA97574E4292}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B12FC21F-489D-4DE1-A8CC-DA97574E4292}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B12FC21F-489D-4DE1-A8CC-DA97574E4292}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EBD0633C-2E9D-4DB1-968C-2C962162C287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EBD0633C-2E9D-4DB1-968C-2C962162C287}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EBD0633C-2E9D-4DB1-968C-2C962162C287}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EBD0633C-2E9D-4DB1-968C-2C962162C287}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
