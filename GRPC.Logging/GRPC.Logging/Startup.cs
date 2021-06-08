@@ -16,6 +16,7 @@ using static GRPC.Logging.Calculator;
 using System.Net.Http;
 using Polly.Extensions.Http;
 using Polly;
+using Grpc.Net.Client;
 
 namespace GRPC.Logging
 {
@@ -38,6 +39,15 @@ namespace GRPC.Logging
 
             services.AddGrpcHealthCheck<GreeterService>();
             services.AddGrpcHealthCheck<CalculatorService>();
+
+            services.AddScoped<GrpcPollyPolicyOptions>(sp => new GrpcPollyPolicyOptions() { RetryCount = 3, RetryInterval = TimeSpan.FromSeconds(5) });
+            services.AddScoped<CallInvoker, GrpcCallInvoker>();
+
+            services.AddGrpcClient<Greeter.GreeterClient>(opt => opt.Address = new Uri("https://localhost:5001"));
+
+            var options = services.BuildServiceProvider().GetService<GrpcPollyPolicyOptions>();
+            var client = (Greeter.GreeterClient)Activator.CreateInstance(typeof(Greeter.GreeterClient), new GrpcCallInvoker(new Channel("localhost", 5001, ChannelCredentials.Insecure), options));
+            client.SayHello(new HelloRequest() { Name = "长安书小妆" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
