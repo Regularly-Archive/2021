@@ -2,10 +2,12 @@
 using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
@@ -33,44 +35,6 @@ namespace GRPC.Logging
             var serverHost = GetLocalIP();
             var serverPort = services.BuildServiceProvider().GetService<IConfiguration>().GetValue<int>("gRPC:Port");
             await RegisterConsul<TService>(services, serverHost, serverPort);
-        }
-
-        private static async Task RegisterConsul<TService>(IServiceCollection services, string serverHost, int serverPort)
-        {
-            var client = services.BuildServiceProvider().GetService<IConsulClient>();
-            var registerID = $"{typeof(TService).Name}-{serverHost}:{serverPort}";
-            await client.Agent.ServiceDeregister(registerID);
-            var result = await client.Agent.ServiceRegister(new AgentServiceRegistration()
-            {
-                ID = registerID,
-                Name = typeof(TService).Name,
-                Address = serverHost,
-                Port = serverPort,
-                Check = new AgentServiceCheck
-                {
-                    TCP = $"{serverHost}:{serverPort}",
-                    Status = HealthStatus.Passing,
-                    DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(10),
-                    Interval = TimeSpan.FromSeconds(10),
-                    Timeout = TimeSpan.FromSeconds(5)
-                },
-                Tags = new string[] { "gRpc" }
-            });
-        }
-
-        private static string GetLocalIP()
-        {
-            var hostName = Dns.GetHostName();
-            var ipEntry = Dns.GetHostEntry(hostName);
-            for (int i = 0; i < ipEntry.AddressList.Length; i++)
-            {
-                if (ipEntry.AddressList[i].AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ipEntry.AddressList[i].ToString();
-                }
-            }
-
-            return "127.0.0.1";
         }
 
         public static async Task<TGrpcClient> GetGrpcClientAsync<TGrpcClient>(this IServiceProvider serviceProvider)
@@ -114,5 +78,61 @@ namespace GRPC.Logging
             var clientInstance = (TGrpcClient)constructorInfo.Invoke(new object[] { channel });
             return Task.FromResult(clientInstance);
         }
+
+        private static async Task RegisterConsul<TService>(IServiceCollection services, string serverHost, int serverPort)
+        {
+            var client = services.BuildServiceProvider().GetService<IConsulClient>();
+            var registerID = $"{typeof(TService).Name}-{serverHost}:{serverPort}";
+            await client.Agent.ServiceDeregister(registerID);
+            var result = await client.Agent.ServiceRegister(new AgentServiceRegistration()
+            {
+                ID = registerID,
+                Name = typeof(TService).Name,
+                Address = serverHost,
+                Port = serverPort,
+                Check = new AgentServiceCheck
+                {
+                    TCP = $"{serverHost}:{serverPort}",
+                    Status = HealthStatus.Passing,
+                    DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(10),
+                    Interval = TimeSpan.FromSeconds(10),
+                    Timeout = TimeSpan.FromSeconds(5)
+                },
+                Tags = new string[] { "gRpc" }
+            });
+        }
+
+        public static IHttpClientBuilder AddHttpsClient<TClient, TImplementation>(this IServiceCollection services)
+            where TClient : class
+            where TImplementation : class, TClient
+            => services.AddHttpClient<TClient, TImplementation>().ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ClientCertificateOptions = ClientCertificateOption.Manual,
+                ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true
+            });
+
+        public static IHttpClientBuilder AddHttpsClient<TClient>(this IServiceCollection services) 
+            where TClient : class
+            => services.AddHttpClient<TClient>().ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ClientCertificateOptions = ClientCertificateOption.Manual,
+                ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true
+            });
+
+        private static string GetLocalIP()
+        {
+            var hostName = Dns.GetHostName();
+            var ipEntry = Dns.GetHostEntry(hostName);
+            for (int i = 0; i < ipEntry.AddressList.Length; i++)
+            {
+                if (ipEntry.AddressList[i].AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ipEntry.AddressList[i].ToString();
+                }
+            }
+
+            return "127.0.0.1";
+        }
+
     }
 }

@@ -13,6 +13,9 @@ using Winton.Extensions.Configuration.Consul;
 using Microsoft.Extensions.Configuration;
 using Grpc.Core;
 using static GRPC.Logging.Calculator;
+using System.Net.Http;
+using Polly.Extensions.Http;
+using Polly;
 
 namespace GRPC.Logging
 {
@@ -35,7 +38,6 @@ namespace GRPC.Logging
 
             services.AddGrpcHealthCheck<GreeterService>();
             services.AddGrpcHealthCheck<CalculatorService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
