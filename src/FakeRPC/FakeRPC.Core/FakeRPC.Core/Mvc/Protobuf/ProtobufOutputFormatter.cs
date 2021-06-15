@@ -15,7 +15,7 @@ namespace FakeRpc.Core.Mvc.Protobuf
 
         public static RuntimeTypeModel TypeModel => _typeModel.Value;
 
-        public string ContentType => "application/x-protobuf";
+        public string ContentType => FakeRpcMediaTypes.Protobuf;
 
         public ProtobufOutputFormatter()
         {

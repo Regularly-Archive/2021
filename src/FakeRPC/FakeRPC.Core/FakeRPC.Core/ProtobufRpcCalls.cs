@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FakeRpc.Core.Mvc;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -18,7 +19,7 @@ namespace FakeRpc.Core
 
         public async Task<TResponse> CallAsync<TRequest, TResponse>(Uri uri, TRequest request)
         {
-            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-protobuf"));
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(FakeRpcMediaTypes.Protobuf));
             var payload = Serizlize(request);
             var httpContent = new ByteArrayContent(payload);
             var response = await _httpClient.PostAsync(uri, httpContent);

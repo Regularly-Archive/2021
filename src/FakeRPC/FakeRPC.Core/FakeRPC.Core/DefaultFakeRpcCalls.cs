@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace FakeRpc.Core
 {
-    public class FakeRpcCalls : IFakeRpcCalls
+    public class DefaultFakeRpcCalls : IFakeRpcCalls
     {
         private readonly HttpClient _httpClient;
-        public FakeRpcCalls(HttpClient httpClient)
+        public DefaultFakeRpcCalls(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
@@ -21,7 +21,7 @@ namespace FakeRpc.Core
         {
             var payload = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(payload);
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpContent.Headers.ContentType = new MediaTypeHeaderValue(FakeRpcMediaTypes.Default);
             var response = await _httpClient.PostAsync(uri, httpContent);
             payload = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<TResponse>(payload);

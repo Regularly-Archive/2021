@@ -31,7 +31,7 @@ namespace FakeRpc.Core
             services.Configure<IISServerOptions>(x => x.AllowSynchronousIO = true);
 
             services.Configure<MvcOptions>(o => o.Conventions.Add(new FakeRpcModelConvention()));
-            services.AddTransient<IFakeRpcCalls, FakeRpcCalls>();
+            services.AddTransient<IFakeRpcCalls, DefaultFakeRpcCalls>();
             return services;
         }
 
@@ -47,7 +47,7 @@ namespace FakeRpc.Core
             {
                 options.InputFormatters.Add(new ProtobufInputFormatter());
                 options.OutputFormatters.Add(new ProtobufOutputFormatter());
-                options.FormatterMappings.SetMediaTypeMappingForFormat("protobuf", MediaTypeHeaderValue.Parse("application/x-protobuf"));
+                options.FormatterMappings.SetMediaTypeMappingForFormat("protobuf", MediaTypeHeaderValue.Parse(FakeRpcMediaTypes.Protobuf));
             });
 
             return services;
