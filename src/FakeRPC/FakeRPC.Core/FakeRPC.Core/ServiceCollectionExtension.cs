@@ -26,9 +26,12 @@ namespace FakeRpc.Core
                 throw new InvalidOperationException("请在AddMvc()方法后调用AddFakeRpc()");
 
             partManager.FeatureProviders.Add(new FakeRpcFeatureProvider());
+
             services.Configure<KestrelServerOptions>(x => x.AllowSynchronousIO = true);
             services.Configure<IISServerOptions>(x => x.AllowSynchronousIO = true);
+
             services.Configure<MvcOptions>(o => o.Conventions.Add(new FakeRpcModelConvention()));
+            services.AddTransient<IFakeRpcCalls, FakeRpcCalls>();
             return services;
         }
 

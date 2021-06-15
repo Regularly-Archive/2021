@@ -42,8 +42,8 @@ namespace FakeRpc.Core
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                memoryStream.Write(bytes, 0, bytes.Length);
                 memoryStream.Position = 0;
+                memoryStream.Write(bytes, 0, bytes.Length);
                 return ProtoBuf.Serializer.Deserialize<T>(memoryStream);
             }
         }
