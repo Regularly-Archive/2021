@@ -1,5 +1,6 @@
 ﻿using FakeRpc.Core;
 using MessagePack;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,7 @@ namespace FakeRpc.Web.Services
     /// HelloReply
     /// </summary>
     [Serializable]
+    [ProtoContract]
     [MessagePackObject]
     public class HelloReply
     {
@@ -48,6 +50,7 @@ namespace FakeRpc.Web.Services
         /// Message
         /// </summary>
         [Key(0)]
+        [ProtoMember(1)]
         public string Message { get; set; }
     }
 
@@ -55,6 +58,7 @@ namespace FakeRpc.Web.Services
     /// HelloRequest
     /// </summary>
     [Serializable]
+    [ProtoContract]
     [MessagePackObject]
     public class HelloRequest
     {
@@ -62,6 +66,7 @@ namespace FakeRpc.Web.Services
         /// Name
         /// </summary>
         [Key(0)]
+        [ProtoMember(1)]
         public string Name { get; set; }
     }
 }

@@ -4,5 +4,49 @@
         <name>FakeRpc.Web</name>
     </assembly>
     <members>
+        <member name="T:FakeRpc.Web.Services.GreetService">
+            <summary>
+            GreetService
+            </summary>
+        </member>
+        <member name="M:FakeRpc.Web.Services.GreetService.SayHello(FakeRpc.Web.Services.HelloRequest)">
+            <summary>
+            SayHello
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:FakeRpc.Web.Services.IGreetService">
+            <summary>
+            IGreetService
+            </summary>
+        </member>
+        <member name="M:FakeRpc.Web.Services.IGreetService.SayHello(FakeRpc.Web.Services.HelloRequest)">
+            <summary>
+            SayHello
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:FakeRpc.Web.Services.HelloReply">
+            <summary>
+            HelloReply
+            </summary>
+        </member>
+        <member name="P:FakeRpc.Web.Services.HelloReply.Message">
+            <summary>
+            Message
+            </summary>
+        </member>
+        <member name="T:FakeRpc.Web.Services.HelloRequest">
+            <summary>
+            HelloRequest
+            </summary>
+        </member>
+        <member name="P:FakeRpc.Web.Services.HelloRequest.Name">
+            <summary>
+            Name
+            </summary>
+        </member>
     </members>
 </doc>

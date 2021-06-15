@@ -12,6 +12,7 @@ using FakeRpc.Web;
 using FakeRpc.Core;
 using System.Net.Http;
 using FakeRpc.Web.Services;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace FakeRpc.Web
 {
@@ -28,7 +29,7 @@ namespace FakeRpc.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddFakeRpc();
+            services.AddFakeRpc().UseProtobuf();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,9 +46,6 @@ namespace FakeRpc.Web
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseSwagger();
-            app.UseSwaggerUI();
 
             app.UseEndpoints(endpoints =>
             {

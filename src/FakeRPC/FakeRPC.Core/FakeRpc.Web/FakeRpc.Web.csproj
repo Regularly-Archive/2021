@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="MsgPack" Version="0.1.0.2011042300" />
+    <PackageReference Include="protobuf-net" Version="3.0.101" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
   </ItemGroup>
 

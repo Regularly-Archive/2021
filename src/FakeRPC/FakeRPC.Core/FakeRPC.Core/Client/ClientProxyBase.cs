@@ -18,11 +18,11 @@ namespace FakeRpc.Core.Mvc
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
             var serviceUrl = $"{(HttpClient).BaseAddress.ToString()}rpc/{ServiceName}/{targetMethod.Name}";
-            var rpcCalls = new FakeRpcCalls(HttpClient);
+            var rpcCalls = new ProtobufRpcCalls(HttpClient);
 
             var requestType = args[0].GetType();
             var responseType = targetMethod.ReturnType.GenericTypeArguments[0];
-            var callMethod = typeof(FakeRpcCalls).GetMethod("CallAsync").MakeGenericMethod(requestType, responseType);
+            var callMethod = typeof(ProtobufRpcCalls).GetMethod("CallAsync").MakeGenericMethod(requestType, responseType);
 
             dynamic caller = callMethod.Invoke(rpcCalls, new object[] { new Uri(serviceUrl), args[0] });
             dynamic result = caller.Result;

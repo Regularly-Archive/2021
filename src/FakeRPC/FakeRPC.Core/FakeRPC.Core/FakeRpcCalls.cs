@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FakeRpc.Core
 {
-    public class FakeRpcCalls : IFakeRpcCall
+    public class FakeRpcCalls : IFakeRpcCalls
     {
         private readonly HttpClient _httpClient;
         public FakeRpcCalls(HttpClient httpClient)
