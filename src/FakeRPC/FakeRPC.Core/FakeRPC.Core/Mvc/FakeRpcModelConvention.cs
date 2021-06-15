@@ -72,23 +72,22 @@ namespace FakeRpc.Core.Mvc
         private void ConfigureSelector(string areaName, string controllerName, ActionModel action)
         {
             action.Selectors.ToList().RemoveAll(selector =>
-                selector.AttributeRouteModel == null && (selector.ActionConstraints == null || !selector.ActionConstraints.Any())
+                selector.AttributeRouteModel == null && 
+                    (selector.ActionConstraints == null || !selector.ActionConstraints.Any())
             );
 
             if (!action.Selectors.Any())
             {
                 action.Selectors.Add(CreateActionSelector(areaName, controllerName, action));
+                return;
             }
-            else
-            {
-                action.Selectors.ToList().ForEach(selector =>
-                {
-                    var routePath = $"{RoutePrefix}/{areaName}/{controllerName}/{action.ActionName}".Replace("//", "/");
-                    var routeModel = new AttributeRouteModel(new RouteAttribute(routePath));
-                    selector.AttributeRouteModel = routeModel;
-                    selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { HttpMethod }));
-                });
 
+            foreach (var selector in action.Selectors)
+            {
+                var routePath = $"{RoutePrefix}/{areaName}/{controllerName}/{action.ActionName}".Replace("//", "/");
+                var routeModel = new AttributeRouteModel(new RouteAttribute(routePath));
+                selector.AttributeRouteModel = routeModel;
+                selector.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { HttpMethod }));
             }
         }
 
@@ -104,15 +103,8 @@ namespace FakeRpc.Core.Mvc
                 if (parameter.BindingInfo != null)
                     continue;
 
-                var type = parameter.ParameterInfo.ParameterType;
-                //if (type.IsPrimitive || type.IsEnum ||
-                //    (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>)))
-                //{
-                    if (IsFromBodyEnable(action, parameter))
-                    {
-                        parameter.BindingInfo = BindingInfo.GetBindingInfo(new[] { new FromBodyAttribute() });
-                    }
-                //}
+                if (IsFromBodyEnable(action, parameter))
+                    parameter.BindingInfo = BindingInfo.GetBindingInfo(new[] { new FromBodyAttribute() });
             }
         }
 
