@@ -30,7 +30,7 @@ Generally, a request and a response like gRPC
 ```csharp
 services.AddControllersWithViews();
 // Use Json by default
-services.AddFakeRpc().UseMessagePack();
+services.AddFakeRpc();
 // Use Protobuf 
 services.AddFakeRpc().UseProtobuf();
 // Use MessagePack
