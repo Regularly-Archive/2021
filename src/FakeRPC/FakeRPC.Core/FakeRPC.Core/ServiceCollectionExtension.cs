@@ -1,4 +1,5 @@
 ﻿using FakeRpc.Core.Mvc;
+using FakeRpc.Core.Mvc.MessagePack;
 using FakeRpc.Core.Mvc.Protobuf;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,6 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using WebApiContrib.Core.Formatter.MessagePack;
 
 namespace FakeRpc.Core
 {
@@ -31,7 +31,6 @@ namespace FakeRpc.Core
             services.Configure<IISServerOptions>(x => x.AllowSynchronousIO = true);
 
             services.Configure<MvcOptions>(o => o.Conventions.Add(new FakeRpcModelConvention()));
-            services.AddTransient<IFakeRpcCalls, DefaultFakeRpcCalls>();
             return services;
         }
 
@@ -48,6 +47,18 @@ namespace FakeRpc.Core
                 options.InputFormatters.Add(new ProtobufInputFormatter());
                 options.OutputFormatters.Add(new ProtobufOutputFormatter());
                 options.FormatterMappings.SetMediaTypeMappingForFormat("protobuf", MediaTypeHeaderValue.Parse(FakeRpcMediaTypes.Protobuf));
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection UseMessagePack(this IServiceCollection services)
+        {
+            services.Configure<MvcOptions>(options =>
+            {
+                options.InputFormatters.Add(new MessagePackInputFormatter());
+                options.OutputFormatters.Add(new MessagePackOutputFormatter());
+                options.FormatterMappings.SetMediaTypeMappingForFormat("msgpack", MediaTypeHeaderValue.Parse(FakeRpcMediaTypes.MessagePack));
             });
 
             return services;

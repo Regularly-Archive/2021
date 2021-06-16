@@ -22,12 +22,13 @@ namespace FakeRpc.Core
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(FakeRpcMediaTypes.Protobuf));
             var payload = Serizlize(request);
             var httpContent = new ByteArrayContent(payload);
+            httpContent.Headers.ContentType = new MediaTypeHeaderValue(FakeRpcMediaTypes.Protobuf);
             var response = await _httpClient.PostAsync(uri, httpContent);
             payload = await response.Content.ReadAsByteArrayAsync();
             return Deserizlize<TResponse>(payload);
         }
 
-        public byte[] Serizlize<T>(T obj)
+        private byte[] Serizlize<T>(T obj)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
@@ -39,7 +40,7 @@ namespace FakeRpc.Core
             }
         }
 
-        public T Deserizlize<T>(byte[] bytes)
+        private T Deserizlize<T>(byte[] bytes)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
