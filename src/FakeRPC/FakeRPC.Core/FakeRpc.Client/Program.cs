@@ -1,4 +1,5 @@
 ﻿using FakeRpc.Core;
+using FakeRpc.Core.Client;
 using FakeRpc.Core.Mvc;
 using FakeRpc.Web.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,7 @@ namespace FakeRpc.Client
 
             var serviceProvider = services.BuildServiceProvider();
             var clientFactory = serviceProvider.GetService<FakeRpcClientFactory>();
-            var clientProxy = clientFactory.Create<IGreetService>(new Uri("http://localhost:5000"));
+            var clientProxy = clientFactory.Create<IGreetService>(new Uri("http://localhost:5000"), MessagePackRpcCalls.Factory);
             var reply = await clientProxy.SayHello(new HelloRequest() { Name = "张三" });
         }
     }

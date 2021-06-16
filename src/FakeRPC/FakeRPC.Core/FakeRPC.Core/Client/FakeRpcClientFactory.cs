@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 
-namespace FakeRpc.Core.Mvc
+namespace FakeRpc.Core.Client
 {
     public class FakeRpcClientFactory
     {
@@ -21,7 +21,7 @@ namespace FakeRpc.Core.Mvc
             _serviceProvider = new ServiceCollection().BuildServiceProvider();
         }
 
-        public TClient Create<TClient>()
+        public TClient Create<TClient>(Func<HttpClient, IFakeRpcCalls> rpcCallsFactory = null)
         {
             var httpClientFactory = _serviceProvider.GetService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient(nameof(TClient));
@@ -29,21 +29,29 @@ namespace FakeRpc.Core.Mvc
             var clientProxy = DispatchProxy.Create<TClient, ClientProxyBase>();
             (clientProxy as ClientProxyBase).HttpClient = httpClient;
             (clientProxy as ClientProxyBase).ServiceName = GetServiceName<TClient>();
+            (clientProxy as ClientProxyBase).RpcCalls = rpcCallsFactory == null ? 
+                new DefaultFakeRpcCalls(httpClient) : rpcCallsFactory(httpClient);
+
             return clientProxy;
         }
 
-        public TClient Create<TClient>(Uri baseUri)
+        public TClient Create<TClient>(Uri baseUri, Func<HttpClient, IFakeRpcCalls> rpcCallsFactory = null)
         {
             var clientProxy = DispatchProxy.Create<TClient, ClientProxyBase>();
+            var httpClient = new HttpClient() { BaseAddress = baseUri };
+
             (clientProxy as ClientProxyBase).HttpClient = new HttpClient() { BaseAddress = baseUri };
             (clientProxy as ClientProxyBase).ServiceName = GetServiceName<TClient>();
+            (clientProxy as ClientProxyBase).RpcCalls = rpcCallsFactory == null ?
+                new DefaultFakeRpcCalls(httpClient) : rpcCallsFactory(httpClient);
+
             return clientProxy;
         }
 
-        public TClient Create<TClient>(string baseUrl)
+        public TClient Create<TClient>(string baseUrl, Func<HttpClient, IFakeRpcCalls> rpcCallsFactory = null)
         {
             var baseUri = new Uri(baseUrl);
-            return Create<TClient>(baseUri);
+            return Create<TClient>(baseUri, rpcCallsFactory);
         }
 
         private string GetServiceName<TClient>()

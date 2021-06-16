@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FakeRpc.Core.Mvc
+namespace FakeRpc.Core
 {
     public class MessagePackRpcCalls : IFakeRpcCalls
     {
@@ -44,5 +44,8 @@ namespace FakeRpc.Core.Mvc
                 return MessagePackSerializer.Deserialize<T>(memoryStream);
             }
         }
+
+        public static Func<HttpClient, IFakeRpcCalls> Factory =
+            httpClient => new MessagePackRpcCalls(httpClient);
     }
 }

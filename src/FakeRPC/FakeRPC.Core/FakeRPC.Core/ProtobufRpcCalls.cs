@@ -49,5 +49,8 @@ namespace FakeRpc.Core
                 return ProtoBuf.Serializer.Deserialize<T>(memoryStream);
             }
         }
+
+        public static Func<HttpClient, IFakeRpcCalls> Factory =
+            httpClient => new ProtobufRpcCalls(httpClient);
     }
 }

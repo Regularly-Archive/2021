@@ -1,4 +1,5 @@
-﻿using FakeRpc.Core.Mvc;
+﻿using FakeRpc.Core.Client;
+using FakeRpc.Core.Mvc;
 using FakeRpc.Core.Mvc.MessagePack;
 using FakeRpc.Core.Mvc.Protobuf;
 using Microsoft.AspNetCore.Builder;
