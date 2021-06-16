@@ -34,10 +34,10 @@ namespace FakeRpc.Core.Mvc
 
         public TClient Create<TClient>(Uri baseUri)
         {
-            var proxy = DispatchProxy.Create<TClient, ClientProxyBase>();
-            (proxy as ClientProxyBase).HttpClient = new HttpClient() { BaseAddress = baseUri };
-            (proxy as ClientProxyBase).ServiceName = GetServiceName<TClient>();
-            return proxy;
+            var clientProxy = DispatchProxy.Create<TClient, ClientProxyBase>();
+            (clientProxy as ClientProxyBase).HttpClient = new HttpClient() { BaseAddress = baseUri };
+            (clientProxy as ClientProxyBase).ServiceName = GetServiceName<TClient>();
+            return clientProxy;
         }
 
         public TClient Create<TClient>(string baseUrl)

@@ -28,7 +28,7 @@ namespace FakeRpc.Core.Mvc
             return Deserizlize<TResponse>(payload);
         }
 
-        public byte[] Serizlize<T>(T obj)
+        private byte[] Serizlize<T>(T obj)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
@@ -37,7 +37,7 @@ namespace FakeRpc.Core.Mvc
             }
         }
 
-        public T Deserizlize<T>(byte[] bytes)
+        private T Deserizlize<T>(byte[] bytes)
         {
             using (MemoryStream memoryStream = new MemoryStream(bytes))
             {
