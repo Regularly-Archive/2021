@@ -4,7 +4,7 @@ A fake RPC framework but it is real.
 
 # Quick Start
 
-## Define Your Service
+* Define Your Service
 
 ```csharp
 [FakeRpc]
@@ -25,7 +25,7 @@ public interface IGreetService
 
 Generally, a request and a response like gRPC
 
-## Configure You Startup
+* Configure You Startup
 
 ```csharp
 services.AddControllersWithViews();
@@ -37,7 +37,7 @@ services.AddFakeRpc().UseProtobuf();
 services.AddFakeRpc().UseMessagePack();
 ```
 
-## Create Your Client
+* Create Your Client
 
 ```csharp
 var services = new ServiceCollection();
