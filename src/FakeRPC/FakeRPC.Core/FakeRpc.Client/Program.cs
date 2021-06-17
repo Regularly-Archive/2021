@@ -20,10 +20,20 @@ namespace FakeRpc.Client
                 client.DefaultRequestVersion = new Version(2, 0);
             });
 
+            services.AddFakeRpcClient<ICalculatorService>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:5001");
+                client.DefaultRequestVersion = new Version(2, 0);
+            });
+
+
             var serviceProvider = services.BuildServiceProvider();
             var clientFactory = serviceProvider.GetService<FakeRpcClientFactory>();
-            var clientProxy = clientFactory.Create<IGreetService>(MessagePackRpcCalls.Factory);
-            var reply = await clientProxy.SayHello(new HelloRequest() { Name = "张三" });
+            var greetProxy = clientFactory.Create<IGreetService>(MessagePackRpcCalls.Factory);
+            var reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
+
+            var calcuProxy = clientFactory.Create<ICalculatorService>(MessagePackRpcCalls.Factory);
+            var result = await calcuProxy.Calculate(new CalculatorRequest { Num1 = 1, Num2 = 2, Op = "+" });
         }
     }
 }

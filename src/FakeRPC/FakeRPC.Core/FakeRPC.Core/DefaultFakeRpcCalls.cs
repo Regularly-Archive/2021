@@ -26,5 +26,9 @@ namespace FakeRpc.Core
             payload = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<TResponse>(payload);
         }
+
+        private string Serizlize<T>(T obj) => JsonConvert.SerializeObject(obj);
+
+        private T Deserizlize<T>(string json) => JsonConvert.DeserializeObject<T>(json);
     }
 }
