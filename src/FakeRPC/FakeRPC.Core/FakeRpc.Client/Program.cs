@@ -32,7 +32,7 @@ namespace FakeRpc.Client
             var greetProxy = clientFactory.Create<IGreetService>(MessagePackRpcCalls.Factory);
             var reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
 
-            var calcuProxy = clientFactory.Create<ICalculatorService>(MessagePackRpcCalls.Factory);
+            var calcuProxy = clientFactory.Create<ICalculatorService>(ProtobufRpcCalls.Factory);
             var result = await calcuProxy.Calculate(new CalculatorRequest { Num1 = 1, Num2 = 2, Op = "+" });
         }
     }
