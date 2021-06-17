@@ -2,6 +2,7 @@
 using FakeRpc.Core.Mvc;
 using FakeRpc.Core.Mvc.MessagePack;
 using FakeRpc.Core.Mvc.Protobuf;
+using MessagePack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -53,16 +54,27 @@ namespace FakeRpc.Core
             return services;
         }
 
-        public static IServiceCollection UseMessagePack(this IServiceCollection services)
+        public static IServiceCollection UseMessagePack(this IServiceCollection services, Action<MessagePackSerializerOptions> configure = null)
         {
+            var defaultSerializerOptions = MessagePackSerializer.DefaultOptions;
+            configure?.Invoke(defaultSerializerOptions);
+
             services.Configure<MvcOptions>(options =>
             {
-                options.InputFormatters.Add(new MessagePackInputFormatter());
-                options.OutputFormatters.Add(new MessagePackOutputFormatter());
+                options.InputFormatters.Add(new MessagePackInputFormatter(defaultSerializerOptions));
+                options.OutputFormatters.Add(new MessagePackOutputFormatter(defaultSerializerOptions));
                 options.FormatterMappings.SetMediaTypeMappingForFormat("msgpack", MediaTypeHeaderValue.Parse(FakeRpcMediaTypes.MessagePack));
             });
 
             return services;
+        }
+
+        public static void AddFakeRpcCallsFactory(this IServiceCollection services, Func<HttpClient,IFakeRpcCalls> factory = null)
+        {
+            if (factory == null)
+                factory = httpClient => new DefaultFakeRpcCalls(httpClient);
+
+            services.AddSingleton(factory);
         }
     }
 }

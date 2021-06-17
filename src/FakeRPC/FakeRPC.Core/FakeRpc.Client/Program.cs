@@ -27,6 +27,8 @@ namespace FakeRpc.Client
                 client.DefaultRequestVersion = new Version(2, 0);
             });
 
+            services.AddFakeRpcCallsFactory(MessagePackRpcCalls.Factory);
+
 
             var serviceProvider = services.BuildServiceProvider();
             var clientFactory = serviceProvider.GetService<FakeRpcClientFactory>();
@@ -51,7 +53,7 @@ namespace FakeRpc.Client
             // Client With Json
             watch = new Stopwatch();
             watch.Start();
-            greetProxy = clientFactory.Create<IGreetService>();
+            greetProxy = clientFactory.Create<IGreetService>(DefaultFakeRpcCalls.Factory);
             reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
             watch.Stop();
             Console.WriteLine($"JSON + HTTP/2 using {watch.ElapsedMilliseconds} ms");

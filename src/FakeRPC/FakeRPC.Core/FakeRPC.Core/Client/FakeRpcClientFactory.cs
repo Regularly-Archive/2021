@@ -25,6 +25,8 @@ namespace FakeRpc.Core.Client
         {
             var httpClientFactory = _serviceProvider.GetService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient(GetServiceName<TClient>());
+            if (rpcCallsFactory == null)
+                rpcCallsFactory = _serviceProvider.GetService<Func<HttpClient, IFakeRpcCalls>>();
 
             var clientProxy = DispatchProxy.Create<TClient, ClientProxyBase>();
             (clientProxy as ClientProxyBase).HttpClient = httpClient;
@@ -39,6 +41,8 @@ namespace FakeRpc.Core.Client
         {
             var clientProxy = DispatchProxy.Create<TClient, ClientProxyBase>();
             var httpClient = new HttpClient() { BaseAddress = baseUri };
+            if (rpcCallsFactory == null)
+                rpcCallsFactory = _serviceProvider.GetService<Func<HttpClient, IFakeRpcCalls>>();
 
             (clientProxy as ClientProxyBase).HttpClient = new HttpClient() { BaseAddress = baseUri };
             (clientProxy as ClientProxyBase).ServiceName = GetServiceName<TClient>();

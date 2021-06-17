@@ -30,5 +30,8 @@ namespace FakeRpc.Core
         private string Serizlize<T>(T obj) => JsonConvert.SerializeObject(obj);
 
         private T Deserizlize<T>(string json) => JsonConvert.DeserializeObject<T>(json);
+
+        public static Func<HttpClient, IFakeRpcCalls> Factory =
+            httpClient => new DefaultFakeRpcCalls(httpClient);
     }
 }
