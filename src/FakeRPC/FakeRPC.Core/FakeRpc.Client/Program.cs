@@ -4,6 +4,7 @@ using FakeRpc.Core.Mvc;
 using FakeRpc.Web.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -29,11 +30,31 @@ namespace FakeRpc.Client
 
             var serviceProvider = services.BuildServiceProvider();
             var clientFactory = serviceProvider.GetService<FakeRpcClientFactory>();
+
+
+            // Client With MessagePack
+            var watch = new Stopwatch();
+            watch.Start();
             var greetProxy = clientFactory.Create<IGreetService>(MessagePackRpcCalls.Factory);
             var reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
+            watch.Stop();
+            Console.WriteLine($"MessagePack + HTTP/2 using {watch.ElapsedMilliseconds} ms");
 
-            var calcuProxy = clientFactory.Create<ICalculatorService>(ProtobufRpcCalls.Factory);
-            var result = await calcuProxy.Calculate(new CalculatorRequest { Num1 = 1, Num2 = 2, Op = "+" });
+            // Client With Protobuf
+            watch = new Stopwatch();
+            watch.Start();
+            greetProxy = clientFactory.Create<IGreetService>(ProtobufRpcCalls.Factory);
+            reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
+            watch.Stop();
+            Console.WriteLine($"Protobuff + HTTP/2 using {watch.ElapsedMilliseconds} ms");
+
+            // Client With Json
+            watch = new Stopwatch();
+            watch.Start();
+            greetProxy = clientFactory.Create<IGreetService>();
+            reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
+            watch.Stop();
+            Console.WriteLine($"JSON + HTTP/2 using {watch.ElapsedMilliseconds} ms");
         }
     }
 }
