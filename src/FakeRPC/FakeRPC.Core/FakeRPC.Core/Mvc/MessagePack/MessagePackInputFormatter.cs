@@ -19,14 +19,15 @@ namespace FakeRpc.Core.Mvc.MessagePack
         public MessagePackInputFormatter(MessagePackSerializerOptions options = null)
         {
             _options = options ?? MessagePackSerializer.DefaultOptions;
+            _options = _options.WithCompression(MessagePackCompression.Lz4Block);
             SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue(_mediaType));
         }
 
-        public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
+        public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {
             var body = context.HttpContext.Request.Body;
-            var result = MessagePackSerializer.Deserialize(context.ModelType, body, _options);
-            return InputFormatterResult.SuccessAsync(result);
+            var result = await MessagePackSerializer.DeserializeAsync(context.ModelType, body, _options);
+            return await InputFormatterResult.SuccessAsync(result);
         }
     }
 }

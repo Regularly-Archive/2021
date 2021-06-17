@@ -17,14 +17,15 @@ namespace FakeRpc.Core.Mvc.MessagePack
         public MessagePackOutputFormatter(MessagePackSerializerOptions options = null)
         {
             _options = options ?? MessagePackSerializer.DefaultOptions;
-            this.SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue(_mediaType));
+            _options = _options.WithCompression(MessagePackCompression.Lz4Block);
+            SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue(_mediaType));
         }
 
-        public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
+        public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context)
         {
             if (context.ObjectType != typeof(object))
             {
-                MessagePackSerializer.Serialize(context.ObjectType, context.HttpContext.Response.Body, context.Object, _options);
+                await MessagePackSerializer.SerializeAsync(context.ObjectType, context.HttpContext.Response.Body, context.Object, _options);
             }
             else if (context.Object == null)
             {
@@ -32,11 +33,11 @@ namespace FakeRpc.Core.Mvc.MessagePack
             }
             else
             {
-                MessagePackSerializer.Serialize(context.Object.GetType(), context.HttpContext.Response.Body, context.Object, _options);
+                await MessagePackSerializer.SerializeAsync(context.Object.GetType(), context.HttpContext.Response.Body, context.Object, _options);
             }
 
             context.ContentType = _mediaType;
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
     }
 }
