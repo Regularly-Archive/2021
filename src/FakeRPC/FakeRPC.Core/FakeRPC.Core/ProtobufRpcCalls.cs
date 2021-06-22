@@ -33,19 +33,14 @@ namespace FakeRpc.Core
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 ProtoBuf.Serializer.Serialize(memoryStream, obj);
-                var result = new byte[memoryStream.Length];
-                memoryStream.Position = 0;
-                memoryStream.Read(result, 0, result.Length);
-                return result;
+                return memoryStream.ToArray();
             }
         }
 
         private T Deserizlize<T>(byte[] bytes)
         {
-            using (MemoryStream memoryStream = new MemoryStream())
+            using (MemoryStream memoryStream = new MemoryStream(bytes))
             {
-                memoryStream.Position = 0;
-                memoryStream.Write(bytes, 0, bytes.Length);
                 return ProtoBuf.Serializer.Deserialize<T>(memoryStream);
             }
         }
