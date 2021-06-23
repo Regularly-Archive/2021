@@ -18,7 +18,7 @@ namespace Kafka.Learning.Consumer
             };
             using (var c = new ConsumerBuilder<Null, string>(consumerConfig).Build())
             {
-                c.Subscribe("test");
+                c.Subscribe("student");
 
                 var cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) => {

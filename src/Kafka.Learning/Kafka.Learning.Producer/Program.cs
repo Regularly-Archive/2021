@@ -19,7 +19,7 @@ namespace Kafka.Learning.Producer
                     for (var i = 1; i <= 100; i++)
                     {
                         var student = new { Id = i.ToString("000"), Name = $"Student{i}" };
-                        var result = await p.ProduceAsync("test", new Message<Null, string> { Value = JsonConvert.SerializeObject(student) });
+                        var result = await p.ProduceAsync("student", new Message<Null, string> { Value = JsonConvert.SerializeObject(student) });
                         Console.WriteLine($"Delivered '{result.Value}'");
                     }
 
