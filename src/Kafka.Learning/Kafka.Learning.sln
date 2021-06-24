@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kafka.Learning.Consumer", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kafka.Learning.Producer", "Kafka.Learning.Producer\Kafka.Learning.Producer.csproj", "{4BFA0781-09B3-4DDC-A649-AFAC63F7062D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka.Learning.EventBus", "Kafka.Learning.EventBus\Kafka.Learning.EventBus.csproj", "{94D7BE71-4CA9-440F-A3B4-BDAB61ADB4BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka.Learning.EventBus.Runner", "Kafka.Learning.Runner\Kafka.Learning.EventBus.Runner.csproj", "{2BB7DA92-2A35-496C-986B-745868FCB14B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{4BFA0781-09B3-4DDC-A649-AFAC63F7062D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BFA0781-09B3-4DDC-A649-AFAC63F7062D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BFA0781-09B3-4DDC-A649-AFAC63F7062D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94D7BE71-4CA9-440F-A3B4-BDAB61ADB4BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94D7BE71-4CA9-440F-A3B4-BDAB61ADB4BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94D7BE71-4CA9-440F-A3B4-BDAB61ADB4BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94D7BE71-4CA9-440F-A3B4-BDAB61ADB4BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BB7DA92-2A35-496C-986B-745868FCB14B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BB7DA92-2A35-496C-986B-745868FCB14B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BB7DA92-2A35-496C-986B-745868FCB14B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BB7DA92-2A35-496C-986B-745868FCB14B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
