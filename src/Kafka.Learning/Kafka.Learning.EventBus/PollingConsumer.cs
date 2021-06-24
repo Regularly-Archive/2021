@@ -22,11 +22,11 @@ namespace Kafka.Learning.EventBus
                 builder.SetErrorHandler((producer, error) => Console.WriteLine("ErrorCode={0},Reason={1},IsFatal={2}", error.Code, error.Reason, error.IsFatal));
             });
             _pollingTimer = new System.Timers.Timer();
-            _pollingTimer.Interval = 200;
+            _pollingTimer.Interval = 500;
             _cancellationTokenSource = new CancellationTokenSource();
             _pollingTimer.Elapsed += (s, e) =>
             {
-                var consumeResult = _consumer.Consume(200);
+                var consumeResult = _consumer.Consume(_cancellationTokenSource.Token);
                 if (consumeResult != null)
                 {
                     OnConsume?.Invoke(consumeResult);

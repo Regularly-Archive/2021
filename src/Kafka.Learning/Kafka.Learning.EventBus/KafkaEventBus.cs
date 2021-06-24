@@ -60,11 +60,11 @@ namespace Kafka.Learning.EventBus
             var eventName = typeof(T).FullName;
             var consumer = new PollingConsumer(_consumeConfig);
             _subscriptionManager.Subscribe<T, TH>();
-            consumer.OnConsume = consumeResult =>
+            consumer.OnConsume = async consumeResult =>
             {
                 var eventKey = consumeResult.Topic;
                 var eventBody = Encoding.UTF8.GetString(consumeResult.Message.Value);
-                ProcessEvent(eventKey, eventBody);
+                await Task.WhenAll(ProcessEvent(eventKey, eventBody));
             };
 
             MakeSureTopicExists(eventName).Wait();

@@ -8,9 +8,9 @@ namespace Kafka.Learning.EventBus
 {
     public class OrderInfoCreateHandler : IEventHandler<OrderInfoCreateEvent>
     {
-        private ILogger<OrderInfoCreateEvent> _logger;
+        private ILogger<OrderInfoCreateHandler> _logger;
 
-        public OrderInfoCreateHandler(ILogger<OrderInfoCreateEvent> logger)
+        public OrderInfoCreateHandler(ILogger<OrderInfoCreateHandler> logger)
         {
             _logger = logger;
         }
