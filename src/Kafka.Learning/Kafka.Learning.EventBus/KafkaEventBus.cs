@@ -34,6 +34,18 @@ namespace Kafka.Learning.EventBus
             _consumeConfig = consumeConfig;
             _serviceProvider = serviceProvider;
             _subscriptionManager = subscriptionManager;
+            _subscriptionManager.OnSubscribe += async (s, e) =>
+            {
+                await MakeSureTopicExists(e.EvenType.FullName);
+                var consumer = new PollingBasedConsumer(_consumeConfig);
+                var eventName = e.EvenType.FullName;
+                consumer.OnConsume = async consumeResult =>
+                {
+                    await Task.WhenAll(ProcessEvent(consumeResult));
+                    consumer.Ack();
+                };
+                consumer.StartPolling(eventName);
+            };
             _producer = BuildProducer<string, byte[]>(producerConfig, builder =>
              {
                  builder.SetKeySerializer(Serializers.Utf8);
@@ -57,19 +69,7 @@ namespace Kafka.Learning.EventBus
             where T : EventBase
             where TH : IEventHandler<T>
         {
-            var eventName = typeof(T).FullName;
-            var consumer = new PollingConsumer(_consumeConfig);
             _subscriptionManager.Subscribe<T, TH>();
-            consumer.OnConsume = async consumeResult =>
-            {
-                var eventKey = consumeResult.Topic;
-                var eventBody = Encoding.UTF8.GetString(consumeResult.Message.Value);
-                await Task.WhenAll(ProcessEvent(eventKey, eventBody));
-            };
-
-            MakeSureTopicExists(eventName).Wait();
-
-            consumer.StartPolling(eventName);
         }
 
         public void Unsubscribe<T, TH>()
@@ -93,8 +93,10 @@ namespace Kafka.Learning.EventBus
             return consumerBuilder.Build();
         }
 
-        private IEnumerable<Task> ProcessEvent(string eventName, string message)
+        private IEnumerable<Task> ProcessEvent(ConsumeResult<string,byte[]> consumeResult)
         {
+            var eventName = consumeResult.Topic;
+            var message = Encoding.UTF8.GetString(consumeResult.Message.Value);
             if (_subscriptionManager.IsEventSubscribed(eventName))
             {
                 var policy = BuildProcessEventPolicy();

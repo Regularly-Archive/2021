@@ -4,9 +4,10 @@ using System.Text;
 
 namespace Kafka.Learning.EventBus
 {
-    public interface IPollingConsumer
+    public interface IPollingBasedConsumer
     {
         void StartPolling(string topicName);
         void StopPolling();
+        void Ack();
     }
 }

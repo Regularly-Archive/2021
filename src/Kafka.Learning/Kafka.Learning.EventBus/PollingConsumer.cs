@@ -7,13 +7,14 @@ using System.Threading;
 
 namespace Kafka.Learning.EventBus
 {
-    public class PollingConsumer : IPollingConsumer
+    public class PollingBasedConsumer : IPollingBasedConsumer
     {
-        private IConsumer<string, byte[]> _consumer;
-        private System.Timers.Timer _pollingTimer;
-        private CancellationTokenSource _cancellationTokenSource;
+        private readonly IConsumer<string, byte[]> _consumer;
+        private readonly System.Timers.Timer _pollingTimer;
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         public Action<ConsumeResult<string, byte[]>> OnConsume;
-        public PollingConsumer(ConsumerConfig consumeConfig)
+        public TimeSpan PollingInterval { get; set; } = TimeSpan.FromSeconds(30);
+        public PollingBasedConsumer(ConsumerConfig consumeConfig)
         {
             _consumer = BuildConsumer<string, byte[]>(consumeConfig, builder => 
             {
@@ -22,15 +23,12 @@ namespace Kafka.Learning.EventBus
                 builder.SetErrorHandler((producer, error) => Console.WriteLine("ErrorCode={0},Reason={1},IsFatal={2}", error.Code, error.Reason, error.IsFatal));
             });
             _pollingTimer = new System.Timers.Timer();
-            _pollingTimer.Interval = 500;
-            _cancellationTokenSource = new CancellationTokenSource();
+            _pollingTimer.Interval = PollingInterval.TotalMilliseconds;
             _pollingTimer.Elapsed += (s, e) =>
             {
                 var consumeResult = _consumer.Consume(_cancellationTokenSource.Token);
                 if (consumeResult != null)
-                {
                     OnConsume?.Invoke(consumeResult);
-                }
             };
         }
 
@@ -42,6 +40,7 @@ namespace Kafka.Learning.EventBus
 
         public void StopPolling()
         {
+            _cancellationTokenSource.Cancel();
             _consumer.Unsubscribe();
             _pollingTimer.Stop();
         }
@@ -51,6 +50,11 @@ namespace Kafka.Learning.EventBus
             var consumerBuilder = new ConsumerBuilder<TKey, TValue>(configuration);
             configure?.Invoke(consumerBuilder);
             return consumerBuilder.Build();
+        }
+
+        public void Ack()
+        {
+            _consumer?.Commit();
         }
     }
 }
