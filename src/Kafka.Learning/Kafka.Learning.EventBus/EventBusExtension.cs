@@ -15,20 +15,6 @@ namespace Kafka.Learning.EventBus
     {
         public static void AddEventBus(this IServiceCollection services)
         {
-            services.AddTransient<ProducerConfig>(sp => new ProducerConfig
-            {
-                BootstrapServers = "192.168.50.162:9092"
-            });
-
-            services.AddTransient<ConsumerConfig>(sp => new ConsumerConfig
-            {
-                GroupId = "test-consumer-group",
-                BootstrapServers = "192.168.50.162:9092",
-                AutoOffsetReset = AutoOffsetReset.Earliest,
-                AutoCommitIntervalMs = 5000,
-                EnableAutoCommit = true
-            });
-
             services.AddSingleton<IEventBusSubscriptionManager, EventBusSubscriptionManager>();
 
             //注册EventBus
@@ -37,6 +23,32 @@ namespace Kafka.Learning.EventBus
                 var eventBus = new KafkaEventBus(
                     sp.GetRequiredService<ProducerConfig>(),
                     sp.GetRequiredService<ConsumerConfig>(),
+                    sp.GetRequiredService<AdminClientConfig>(),
+                    sp.GetRequiredService<ILogger<KafkaEventBus>>(),
+                    sp.GetRequiredService<IEventBusSubscriptionManager>(),
+                    sp
+                );
+                eventBus.SubscribeAll();
+                return eventBus;
+            });
+
+            //注册EventHandlers
+            var eventHandlers = GetEventHandlers();
+            if (eventHandlers != null && eventHandlers.Any())
+                eventHandlers.ToList().ForEach(x => services.AddTransient(x));
+        }
+
+        public static void AddEventBus(this IServiceCollection services, ProducerConfig producerConfig, ConsumerConfig consumerConfig, AdminClientConfig adminCientConfig)
+        {
+            services.AddSingleton<IEventBusSubscriptionManager, EventBusSubscriptionManager>();
+
+            //注册EventBus
+            services.AddSingleton<IEventBus, KafkaEventBus>(sp =>
+            {
+                var eventBus = new KafkaEventBus(
+                    producerConfig,
+                    consumerConfig,
+                    adminCientConfig,
                     sp.GetRequiredService<ILogger<KafkaEventBus>>(),
                     sp.GetRequiredService<IEventBusSubscriptionManager>(),
                     sp

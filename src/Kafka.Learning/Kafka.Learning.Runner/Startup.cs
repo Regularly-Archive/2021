@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Confluent.Kafka;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,21 @@ namespace Kafka.Learning.EventBus
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+
+            services.AddTransient<ProducerConfig>(sp => new ProducerConfig
+            {
+                BootstrapServers = "192.168.50.162:9092"
+            });
+
+            services.AddTransient<ConsumerConfig>(sp => new ConsumerConfig
+            {
+                GroupId = "test-consumer-group",
+                BootstrapServers = "192.168.50.162:9092",
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                AutoCommitIntervalMs = 5000,
+                EnableAutoCommit = false,
+            });
+
             services.AddEventBus();
 
             var serviceProvider = services.BuildServiceProvider();

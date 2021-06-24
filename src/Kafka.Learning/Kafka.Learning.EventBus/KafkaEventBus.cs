@@ -20,11 +20,13 @@ namespace Kafka.Learning.EventBus
         private IProducer<string, byte[]> _producer;
         private ILogger<KafkaEventBus> _logger;
         private ConsumerConfig _consumeConfig;
+        private AdminClientConfig _adminClientConfig;
         private IEventBusSubscriptionManager _subscriptionManager;
         private IServiceProvider _serviceProvider;
         public KafkaEventBus(
             ProducerConfig producerConfig,
             ConsumerConfig consumeConfig,
+            AdminClientConfig adminClientConfig,
             ILogger<KafkaEventBus> logger,
             IEventBusSubscriptionManager subscriptionManager,
             IServiceProvider serviceProvider
@@ -33,6 +35,7 @@ namespace Kafka.Learning.EventBus
             _logger = logger;
             _consumeConfig = consumeConfig;
             _serviceProvider = serviceProvider;
+            _adminClientConfig = adminClientConfig;
             _subscriptionManager = subscriptionManager;
             _subscriptionManager.OnSubscribe += async (s, e) =>
             {
@@ -131,7 +134,7 @@ namespace Kafka.Learning.EventBus
 
         private async Task MakeSureTopicExists(string topicName)
         {
-            var adminClient = new AdminClientBuilder(new AdminClientConfig() { BootstrapServers = "192.168.50.162:9092" }).Build();
+            var adminClient = new AdminClientBuilder(_adminClientConfig).Build();
             var matadata = adminClient.GetMetadata(topicName, TimeSpan.FromSeconds(10));
             if (matadata.Topics == null || matadata.Topics.Count == 0)
             {
@@ -143,7 +146,5 @@ namespace Kafka.Learning.EventBus
 
             await Task.CompletedTask;
         }
-
-
     }
 }
