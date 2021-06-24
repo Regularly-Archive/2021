@@ -86,13 +86,6 @@ namespace Kafka.Learning.EventBus
             return producerBuilder.Build();
         }
 
-        private IConsumer<TKey, TValue> BuildConsumer<TKey, TValue>(ConsumerConfig configuration, Action<ConsumerBuilder<TKey, TValue>> configure)
-        {
-            var consumerBuilder = new ConsumerBuilder<TKey, TValue>(configuration);
-            configure?.Invoke(consumerBuilder);
-            return consumerBuilder.Build();
-        }
-
         private IEnumerable<Task> ProcessEvent(ConsumeResult<string,byte[]> consumeResult)
         {
             var eventName = consumeResult.Topic;

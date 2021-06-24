@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
@@ -29,13 +29,24 @@ namespace Kafka.Learning.EventBus
 
             var serviceProvider = services.BuildServiceProvider();
             var eventBus = serviceProvider.GetService<IEventBus>();
-            eventBus.Publish<OrderInfoCreateEvent>(new OrderInfoCreateEvent()
+            eventBus.Publish(new OrderInfoCreateEvent()
             {
                 ORDER_ID = "OR001",
             });
-            eventBus.Publish<OrderInfoCreateEvent>(new OrderInfoCreateEvent()
+            eventBus.Publish(new OrderInfoCreateEvent()
             {
                 ORDER_ID = "OR002",
+            });
+            eventBus.Publish(new WriteLogEvent()
+            {
+                TRANSACTION_ID = Guid.NewGuid().ToString("N"),
+                LOG_LEVEL = "DEBUG",
+                HOST_NAME = "localhost",
+                HOST_IP = "localhost",
+                CONTENT = "起风了，唯有努力生存",
+                USER_ID = "飞鸿踏雪",
+                TTID = "Default",
+                APP_NAMESPACE = "ASP.NET Core"
             });
         }
 
