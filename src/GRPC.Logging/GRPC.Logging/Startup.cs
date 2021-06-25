@@ -35,19 +35,19 @@ namespace GRPC.Logging
         {
             services.AddGrpc(options => options.Interceptors.Add<GrpcServerLoggingInterceptor>());
 
-            services.AddHostedService<HostedHealthCheckService>();
+            //services.AddHostedService<HostedHealthCheckService>();
 
-            services.AddGrpcHealthCheck<GreeterService>();
-            services.AddGrpcHealthCheck<CalculatorService>();
+            //services.AddGrpcHealthCheck<GreeterService>();
+            //services.AddGrpcHealthCheck<CalculatorService>();
 
-            services.AddScoped<GrpcPollyPolicyOptions>(sp => new GrpcPollyPolicyOptions() { RetryCount = 3, RetryInterval = TimeSpan.FromSeconds(5) });
-            services.AddScoped<CallInvoker, GrpcCallInvoker>();
+            //services.AddScoped<GrpcPollyPolicyOptions>(sp => new GrpcPollyPolicyOptions() { RetryCount = 3, RetryInterval = TimeSpan.FromSeconds(5) });
+            //services.AddScoped<CallInvoker, GrpcCallInvoker>();
 
-            services.AddGrpcClient<Greeter.GreeterClient>(opt => opt.Address = new Uri("https://localhost:5001"));
+            //services.AddGrpcClient<Greeter.GreeterClient>(opt => opt.Address = new Uri("https://localhost:5001"));
 
-            var options = services.BuildServiceProvider().GetService<GrpcPollyPolicyOptions>();
-            var client = (Greeter.GreeterClient)Activator.CreateInstance(typeof(Greeter.GreeterClient), new GrpcCallInvoker(new Channel("localhost", 5001, ChannelCredentials.Insecure), options));
-            client.SayHello(new HelloRequest() { Name = "长安书小妆" });
+            //var options = services.BuildServiceProvider().GetService<GrpcPollyPolicyOptions>();
+            //var client = (Greeter.GreeterClient)Activator.CreateInstance(typeof(Greeter.GreeterClient), new GrpcCallInvoker(new Channel("localhost", 5001, ChannelCredentials.Insecure), options));
+            //client.SayHello(new HelloRequest() { Name = "长安书小妆" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

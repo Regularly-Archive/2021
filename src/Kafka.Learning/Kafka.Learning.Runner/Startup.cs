@@ -26,6 +26,8 @@ namespace Kafka.Learning.EventBus
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.AddMvc();
+            services.AddControllers();
 
             services.AddTransient<ProducerConfig>(sp => new ProducerConfig
             {
@@ -45,28 +47,6 @@ namespace Kafka.Learning.EventBus
             });
 
             services.AddEventBus();
-
-            var serviceProvider = services.BuildServiceProvider();
-            var eventBus = serviceProvider.GetService<IEventBus>();
-            eventBus.Publish(new OrderInfoCreateEvent()
-            {
-                ORDER_ID = "OR001",
-            });
-            eventBus.Publish(new OrderInfoCreateEvent()
-            {
-                ORDER_ID = "OR002",
-            });
-            eventBus.Publish(new WriteLogEvent()
-            {
-                TRANSACTION_ID = Guid.NewGuid().ToString("N"),
-                LOG_LEVEL = "DEBUG",
-                HOST_NAME = "localhost",
-                HOST_IP = "localhost",
-                CONTENT = "起风了，唯有努力生存",
-                USER_ID = "飞鸿踏雪",
-                TTID = "Default",
-                APP_NAMESPACE = "ASP.NET Core"
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -93,6 +73,8 @@ namespace Kafka.Learning.EventBus
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }
