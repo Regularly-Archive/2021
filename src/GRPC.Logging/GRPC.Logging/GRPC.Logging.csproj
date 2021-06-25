@@ -21,6 +21,7 @@
     <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Consul" Version="1.6.10.1" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.38.0" />
     <PackageReference Include="Grpc.Core" Version="2.38.0" />
     <PackageReference Include="Grpc.HealthCheck" Version="2.38.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.37.0" />

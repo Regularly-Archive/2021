@@ -32,7 +32,7 @@ namespace Grpc.Gateway
             services.AddControllers();
             services.Configure<KestrelServerOptions>(x => x.AllowSynchronousIO = true);
             services.Configure<IISServerOptions>(x => x.AllowSynchronousIO = true);
-            services.AddGrpcClient<Greeter.GreeterClient>(opt =>
+            services.AddGrpcClients(opt =>
             {
                 opt.Address = new Uri("https://localhost:8001");
             });
@@ -62,13 +62,17 @@ namespace Grpc.Gateway
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
             });
 
-            app.AddGrpcGateway<Greeter.GreeterClient, HelloRequest, HelloReply>(
-                route: "greet/SayHello",
-                requestBuilder: json => new MessageParser<HelloRequest>(() => new HelloRequest()).ParseJson(json),
-                responseBuilder: (client, request) => client.SayHelloAsync(request).ResponseAsync.Result
-            );
+            //app.AddGrpcGateway<Greeter.GreeterClient, HelloRequest, HelloReply>(
+            //    route: "greet/SayHello",
+            //    requestBuilder: json => new MessageParser<HelloRequest>(() => new HelloRequest()).ParseJson(json),
+            //    responseBuilder: (client, request) => client.SayHelloAsync(request).ResponseAsync.Result
+            //);
+
+            app.AddGrpcGateway();
         }
     }
 }

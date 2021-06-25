@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.38.0" />
     <PackageReference Include="Mapster" Version="7.2.0" />
   </ItemGroup>
 
