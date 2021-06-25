@@ -10,16 +10,16 @@ namespace Kafka.Learning.EventBus.Runner.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class MessageController : ControllerBase
     {
         private readonly IEventBus _eventBus;
-        public ValuesController(IEventBus eventBus)
+        public MessageController(IEventBus eventBus)
         {
             _eventBus = eventBus;
         }
 
-        // GET: api/<ValuesController>
-        [HttpGet]
+        // GET: api/Message/Publish
+        [HttpGet("Publish")]
         public void Get()
         {
             _eventBus.Publish(new OrderInfoCreateEvent()
@@ -43,31 +43,6 @@ namespace Kafka.Learning.EventBus.Runner.Controller
                 TTID = "Default",
                 APP_NAMESPACE = "ASP.NET Core"
             });
-        }
-
-        // GET api/<ValuesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<ValuesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ValuesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

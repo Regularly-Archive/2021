@@ -62,7 +62,8 @@ namespace Kafka.Learning.EventBus
             var eventName = typeof(TEvent).FullName;
             var eventBody = JsonConvert.SerializeObject(@event);
             MakeSureTopicExists(eventName).Wait();
-            _producer.Produce(eventName, new Message<string, byte[]> { Value = Encoding.UTF8.GetBytes(eventBody) }, deliveryReport =>
+            var message = new Message<string, byte[]> { Value = Encoding.UTF8.GetBytes(eventBody) };
+            _producer.Produce(eventName, message, deliveryReport =>
             {
                 _logger.LogInformation($"Delivery message \"{eventBody}\" to topic \"{deliveryReport.Topic}\" {deliveryReport.Status}.");
             });
