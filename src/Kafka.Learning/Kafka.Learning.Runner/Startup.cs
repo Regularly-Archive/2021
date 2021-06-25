@@ -31,7 +31,6 @@ namespace Kafka.Learning.EventBus
             {
                 BootstrapServers = "192.168.50.162:9092"
             });
-
             services.AddTransient<ConsumerConfig>(sp => new ConsumerConfig
             {
                 GroupId = "test-consumer-group",
@@ -39,6 +38,10 @@ namespace Kafka.Learning.EventBus
                 AutoOffsetReset = AutoOffsetReset.Earliest,
                 AutoCommitIntervalMs = 5000,
                 EnableAutoCommit = false,
+            });
+            services.AddTransient<AdminClientConfig>(sp => new AdminClientConfig()
+            {
+                BootstrapServers = "192.168.50.162:9092"
             });
 
             services.AddEventBus();
