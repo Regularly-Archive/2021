@@ -31,5 +31,7 @@ namespace Kafka.Learning.EventBus
         IEnumerable<Type> GetHandlersForEvent(string eventName);
 
         string GetEventKey<T>() where T : EventBase;
+
+        string GetEventKey(Type handleType);
     }
 }

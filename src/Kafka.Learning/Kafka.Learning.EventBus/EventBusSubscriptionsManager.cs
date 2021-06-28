@@ -27,12 +27,27 @@ namespace Kafka.Learning.EventBus
             return typeof(T).FullName;
         }
 
+        public string GetEventKey(Type handlerType)
+        {
+            if (_eventTypes.Contains(handlerType))
+                return string.Empty;
+
+            foreach (var handler in _eventHandlers)
+            {
+                if (handler.Value.Any() && handler.Value.Contains(handlerType))
+                    return handler.Key;
+            }
+
+            return string.Empty;
+        }
+
+
         public Type GetEventTypeByName(string eventName)
         {
             return _eventTypes.FirstOrDefault(x => x.FullName == eventName);
         }
 
-        public IEnumerable<Type> GetHandlersForEvent<T>() 
+        public IEnumerable<Type> GetHandlersForEvent<T>()
             where T : EventBase
         {
             var eventName = GetEventKey<T>();
@@ -64,7 +79,8 @@ namespace Kafka.Learning.EventBus
             where TH : IEventHandler<T>
         {
             var eventName = GetEventKey<T>();
-            if (_eventHandlers.ContainsKey(eventName) && !_eventHandlers[eventName].Any(x => x == typeof(TH))){
+            if (_eventHandlers.ContainsKey(eventName) && !_eventHandlers[eventName].Any(x => x == typeof(TH)))
+            {
                 _eventHandlers[eventName].Add(typeof(TH));
             }
             else
@@ -72,7 +88,7 @@ namespace Kafka.Learning.EventBus
                 _eventHandlers[eventName] = new List<Type>() { typeof(TH) };
                 _eventTypes.Add(typeof(T));
             }
-            if (OnSubscribe != null) 
+            if (OnSubscribe != null)
                 OnSubscribe(this, new EventBusSubscriptionEventArgs() { EvenType = typeof(T), HandlerType = typeof(TH) });
         }
 
@@ -81,10 +97,11 @@ namespace Kafka.Learning.EventBus
             where TH : IEventHandler<T>
         {
             var eventName = GetEventKey<T>();
-            if (_eventHandlers.ContainsKey(eventName) && _eventHandlers[eventName].Any(x => x == typeof(TH))){
+            if (_eventHandlers.ContainsKey(eventName) && _eventHandlers[eventName].Any(x => x == typeof(TH)))
+            {
                 _eventHandlers[eventName].Remove(typeof(TH));
             }
-            if(_eventHandlers.ContainsKey(eventName) && !_eventHandlers[eventName].Any())
+            if (_eventHandlers.ContainsKey(eventName) && !_eventHandlers[eventName].Any())
             {
                 _eventHandlers.Remove(eventName);
                 _eventTypes.RemoveAll(x => x.FullName == eventName);

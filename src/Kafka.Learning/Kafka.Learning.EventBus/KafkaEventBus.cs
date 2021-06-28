@@ -45,7 +45,7 @@ namespace Kafka.Learning.EventBus
                 consumer.OnConsume = async consumeResult =>
                 {
                     await Task.WhenAll(ProcessEvent(consumeResult));
-                    consumer.Ack();
+                    consumer.Ack(consumeResult);
                 };
                 consumer.StartPolling(eventName);
             };

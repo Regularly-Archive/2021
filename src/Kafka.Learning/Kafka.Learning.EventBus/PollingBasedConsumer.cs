@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Kafka.Learning.EventBus
 {
@@ -52,9 +53,9 @@ namespace Kafka.Learning.EventBus
             return consumerBuilder.Build();
         }
 
-        public void Ack()
+        public void Ack(ConsumeResult<string, byte[]> consumeResult)
         {
-            _consumer?.Commit();
+            _consumer?.Commit(consumeResult);
         }
     }
 }
