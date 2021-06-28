@@ -69,6 +69,7 @@ namespace Grpc.Gateway
 
                             context.Response.Headers.Add("X-Grpc-Service", $"{serviceName}Service");
                             context.Response.Headers.Add("X-Grpc-Method", $"{methodName}Async");
+                            context.Response.Headers.Add("X-Grpc-Client", $"{client.GetType().FullName}");
 
                             await context.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(response));
                             context.Response.StatusCode = 200;
