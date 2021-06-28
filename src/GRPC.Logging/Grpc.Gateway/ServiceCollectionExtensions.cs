@@ -12,6 +12,7 @@ using Grpc.Core;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using Grpc.Net.ClientFactory;
+using Microsoft.Extensions.Logging;
 
 namespace Grpc.Gateway
 {
@@ -41,6 +42,8 @@ namespace Grpc.Gateway
 
         public static void AddGrpcGateway(this IApplicationBuilder app)
         {
+            var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
+            var logger = loggerFactory.CreateLogger("GrpcGateway");
             var clientTypes = FromThis().Where(x => x.BaseType != null && x.BaseType.IsGenericType && x.BaseType.GetGenericTypeDefinition() == typeof(ClientBase<>)).ToList();
             foreach (var clientType in clientTypes)
             {
@@ -48,8 +51,9 @@ namespace Grpc.Gateway
                 foreach (var method in clientType.GetMethods().Where(x => x.Name.EndsWith("Async") && x.GetParameters().Length == 4))
                 {
                     var methodName = method.Name.Replace("Async", "");
-                    Console.WriteLine($"gRPC Gateway: {serviceName}/{methodName}");
-                    app.UseEndpoints(endpoints => endpoints.MapPost($"{serviceName}/{methodName}", async context =>
+                    var grpcRoute = $"{serviceName}/{methodName}";
+                    logger.LogInformation($"Add gRPC Gateway: {grpcRoute}");
+                    app.UseEndpoints(endpoints => endpoints.MapPost($"{grpcRoute}", async context =>
                     {
                         using (var streamReader = new StreamReader(context.Request.Body))
                         {
@@ -62,6 +66,9 @@ namespace Grpc.Gateway
 
                             dynamic reply = CallRpcMethod(client, method, request);
                             var response = JsonConvert.SerializeObject(reply.ResponseAsync.Result);
+
+                            context.Response.Headers.Add("X-Grpc-Service", $"{serviceName}Service");
+                            context.Response.Headers.Add("X-Grpc-Method", $"{methodName}Async");
 
                             await context.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(response));
                             context.Response.StatusCode = 200;
