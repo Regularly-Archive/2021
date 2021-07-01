@@ -9,4 +9,7 @@ Non-formal Project of 2021
 * [EFCore实体命名约束库的学习](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/EF.Naming)
 * [Python多线程/进程学习](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/multiple-threading)
 * [2020年全年微博热搜数据分析](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/resou-analyse)
+* [ASP.NET Core + Envoy实现反向代理](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/EnvoyGateway)
+* [ASP.NET Core + Envoy实现负载均衡](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/EnvoyLB)
+* [gRPC + Envoy实现RPC服务的RESTful化](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/EnvoyGrpc)
 
