@@ -1,0 +1,16 @@
+version: '3'
+services:
+  envoygateway:
+    build: Envoy/
+    ports:
+      - "9090:9090"
+      - "9091:9091"
+    volumes:
+      - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
+  grpcservice:
+    build: GrpcService/GrpcService/
+    ports:
+      - "8082:80"
+    environment:
+      ASPNETCORE_URLS: "http://+"
+      ASPNETCORE_ENVIRONMENT: "Development"
