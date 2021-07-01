@@ -49,6 +49,8 @@ namespace FakeRpc.Core
             }
         }
 
+        public Task<TResponse> CallAsync<TResponse>(Uri uri) => CallAsync<object, TResponse>(uri, Nil.Default);
+
         public static Func<HttpClient, IFakeRpcCalls> Factory =
             httpClient => new MessagePackRpcCalls(httpClient);
     }

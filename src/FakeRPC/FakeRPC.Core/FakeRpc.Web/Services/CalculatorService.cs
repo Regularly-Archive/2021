@@ -37,6 +37,16 @@ namespace FakeRpc.Web.Services
 
             return Task.FromResult(new CalculatorReply() { Expression = exp, Result = result });
         }
+
+        public Task<CalculatorReply> Random()
+        {
+            var operators = new string[] { "+", "-", "*", "/" };
+            var random = new Random();
+            var num1 = random.Next(0, 100);
+            var num2 = random.Next(0, 100);
+            var op = operators[random.Next(operators.Length)];
+            return Calculate(new CalculatorRequest() { Num1 = num1, Num2 = num2, Op = op });
+        }
     }
 
     [Serializable]
@@ -71,5 +81,6 @@ namespace FakeRpc.Web.Services
     public interface ICalculatorService
     {
         Task<CalculatorReply> Calculate(CalculatorRequest request);
+        Task<CalculatorReply> Random();
     }
 }

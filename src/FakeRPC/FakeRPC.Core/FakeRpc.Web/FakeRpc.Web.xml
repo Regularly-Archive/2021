@@ -16,6 +16,12 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:FakeRpc.Web.Services.GreetService.SayWho">
+            <summary>
+            SayWho
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:FakeRpc.Web.Services.IGreetService">
             <summary>
             IGreetService
@@ -26,6 +32,12 @@
             SayHello
             </summary>
             <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FakeRpc.Web.Services.IGreetService.SayWho">
+            <summary>
+            SayWho
+            </summary>
             <returns></returns>
         </member>
         <member name="T:FakeRpc.Web.Services.HelloReply">

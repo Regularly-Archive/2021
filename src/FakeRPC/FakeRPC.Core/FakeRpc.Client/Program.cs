@@ -39,6 +39,9 @@ namespace FakeRpc.Client
             watch.Start();
             var greetProxy = clientFactory.Create<IGreetService>(MessagePackRpcCalls.Factory);
             var reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
+            reply = await greetProxy.SayWho();
+            var calculatorProxy = clientFactory.Create<ICalculatorService>(MessagePackRpcCalls.Factory);
+            var result = calculatorProxy.Random();
             watch.Stop();
             Console.WriteLine($"MessagePack + HTTP/2 using {watch.ElapsedMilliseconds} ms");
 
@@ -47,6 +50,9 @@ namespace FakeRpc.Client
             watch.Start();
             greetProxy = clientFactory.Create<IGreetService>(ProtobufRpcCalls.Factory);
             reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
+            reply = await greetProxy.SayWho();
+            calculatorProxy = clientFactory.Create<ICalculatorService>(ProtobufRpcCalls.Factory);
+            result = calculatorProxy.Random();
             watch.Stop();
             Console.WriteLine($"Protobuff + HTTP/2 using {watch.ElapsedMilliseconds} ms");
 
@@ -55,6 +61,9 @@ namespace FakeRpc.Client
             watch.Start();
             greetProxy = clientFactory.Create<IGreetService>(DefaultFakeRpcCalls.Factory);
             reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
+            reply = await greetProxy.SayWho();
+            calculatorProxy = clientFactory.Create<ICalculatorService>(DefaultFakeRpcCalls.Factory);
+            result = calculatorProxy.Random();
             watch.Stop();
             Console.WriteLine($"JSON + HTTP/2 using {watch.ElapsedMilliseconds} ms");
         }

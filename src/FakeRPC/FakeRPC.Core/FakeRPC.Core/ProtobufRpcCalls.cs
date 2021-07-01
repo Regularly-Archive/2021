@@ -1,4 +1,5 @@
 ﻿using FakeRpc.Core.Mvc;
+using ProtoBuf.WellKnownTypes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,6 +45,8 @@ namespace FakeRpc.Core
                 return ProtoBuf.Serializer.Deserialize<T>(memoryStream);
             }
         }
+
+        public Task<TResponse> CallAsync<TResponse>(Uri uri) => CallAsync<object, TResponse>(uri, new Empty());
 
         public static Func<HttpClient, IFakeRpcCalls> Factory =
             httpClient => new ProtobufRpcCalls(httpClient);

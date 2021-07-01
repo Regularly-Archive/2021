@@ -19,6 +19,7 @@ namespace FakeRpc.Core
 
         public virtual async Task<TResponse> CallAsync<TRequest, TResponse>(Uri uri, TRequest request)
         {
+
             var payload = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(payload);
             httpContent.Headers.ContentType = new MediaTypeHeaderValue(FakeRpcMediaTypes.Default);
@@ -30,6 +31,8 @@ namespace FakeRpc.Core
         private string Serizlize<T>(T obj) => JsonConvert.SerializeObject(obj);
 
         private T Deserizlize<T>(string json) => JsonConvert.DeserializeObject<T>(json);
+
+        public Task<TResponse> CallAsync<TResponse>(Uri uri) => CallAsync<object, TResponse>(uri, new { });
 
         public static Func<HttpClient, IFakeRpcCalls> Factory =
             httpClient => new DefaultFakeRpcCalls(httpClient);

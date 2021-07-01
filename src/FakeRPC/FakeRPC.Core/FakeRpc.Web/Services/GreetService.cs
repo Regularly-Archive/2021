@@ -23,6 +23,15 @@ namespace FakeRpc.Web.Services
         {
             return Task.FromResult(new HelloReply { Message = $"Hello {request.Name}" });
         }
+
+        /// <summary>
+        /// SayWho
+        /// </summary>
+        /// <returns></returns>
+        public Task<HelloReply> SayWho()
+        {
+            return Task.FromResult(new HelloReply { Message = $"I'm 长安书小妆" });
+        }
     }
 
     /// <summary>
@@ -36,6 +45,12 @@ namespace FakeRpc.Web.Services
         /// <param name="request"></param>
         /// <returns></returns>
         Task<HelloReply> SayHello(HelloRequest request);
+
+        /// <summary>
+        /// SayWho
+        /// </summary>
+        /// <returns></returns>
+        Task<HelloReply> SayWho();
     }
 
     /// <summary>
