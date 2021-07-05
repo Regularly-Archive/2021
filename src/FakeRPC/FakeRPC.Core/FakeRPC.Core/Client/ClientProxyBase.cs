@@ -25,6 +25,7 @@ namespace FakeRpc.Core.Client
 
             if (args.Length == 1)
             {
+                // Unary Request Call
                 var requestType = args[0].GetType();
                 var responseType = targetMethod.ReturnType.GenericTypeArguments[0];
                 dynamic result = CallUnaryRequest(RpcCalls, requestType, responseType, new Uri(serviceUrl), args[0]);
@@ -32,6 +33,7 @@ namespace FakeRpc.Core.Client
             }
             else if (args.Length == 0)
             {
+                // Empty Request Call
                 var responseType = targetMethod.ReturnType.GenericTypeArguments[0];
                 dynamic result = CallEmptyRequest(RpcCalls, responseType, new Uri(serviceUrl));
                 return Task.FromResult(result.Result);
