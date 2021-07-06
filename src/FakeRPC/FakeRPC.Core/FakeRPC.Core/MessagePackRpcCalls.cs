@@ -32,7 +32,7 @@ namespace FakeRpc.Core
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                var options = MessagePackSerializer.DefaultOptions;
+                var options = MessagePackSerializerOptions.Standard;
                 options = options.WithCompression(MessagePackCompression.Lz4Block);
                 await MessagePackSerializer.SerializeAsync<T>(memoryStream, obj, options);
                 return memoryStream.ToArray();
@@ -43,7 +43,8 @@ namespace FakeRpc.Core
         {
             using (MemoryStream memoryStream = new MemoryStream(bytes))
             {
-                var options = MessagePackSerializer.DefaultOptions;
+
+                var options = MessagePackSerializerOptions.Standard;
                 options = options.WithCompression(MessagePackCompression.Lz4Block);
                 return await MessagePackSerializer.DeserializeAsync<T>(memoryStream, options);
             }
