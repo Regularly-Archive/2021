@@ -1,0 +1,39 @@
+version: "3"
+services:
+  # prometheus
+  prom:
+    image: quay.io/prometheus/prometheus:latest
+    volumes:
+     - ./Prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:rw
+    ports:
+     - 2333:9090
+
+  # envoy_gateway
+  envoy_gateway:
+    build: Envoy/
+    ports:
+     - "9090:9090"
+     - "9091:9091"
+    volumes:
+     - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
+  
+  # grpc_service
+  grpc_service:
+    build: GrpcService/GrpcService/
+    ports:
+     - "8082:80"
+    environment:
+      ASPNETCORE_URLS: "http://+"
+      ASPNETCORE_ENVIRONMENT: "Development"
+
+  # grafana
+  grafana:
+    image: grafana/grafana
+    ports:
+     - "3000:3000"
+    environment:
+     - “GF_SECURITY_ADMIN_PASSWORD=Gz2020@”
+     - “GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app”
+    restart: always
+    depends_on:
+     - prom
