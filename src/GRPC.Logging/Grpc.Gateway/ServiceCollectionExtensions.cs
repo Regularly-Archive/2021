@@ -20,7 +20,6 @@ namespace Grpc.Gateway
     {
         public static void AddGrpcGateway<TClient, TRequest, TResponse>(this IApplicationBuilder app, string route, Func<string, TRequest> requestBuilder, Func<TClient, TRequest, TResponse> responseBuilder)
         {
-            var routeData =
             app.UseEndpoints(endpoints => endpoints.MapPost(route, async context =>
             {
                 using (var streamReader = new StreamReader(context.Request.Body))
