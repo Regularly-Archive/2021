@@ -12,4 +12,6 @@ Non-formal Project of 2021
 * [ASP.NET Core + Envoy实现反向代理](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/EnvoyGateway)
 * [ASP.NET Core + Envoy实现负载均衡](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/EnvoyLB)
 * [gRPC + Envoy实现RPC服务的RESTful化](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/EnvoyGrpc)
+* [gRPC + Envoy实现微服务的监控预警](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/EnvoyMonitor)
+
 
