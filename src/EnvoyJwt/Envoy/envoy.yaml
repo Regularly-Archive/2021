@@ -36,17 +36,15 @@ static_resources:
                 "@type": type.googleapis.com/envoy.extensions.filters.http.jwt_authn.v3.JwtAuthentication
                 providers:
                   jwt_provider:
-                    issuer: "https://blog.yuanpei.me"
+                    issuer: "http://192.168.50.162:7070/auth/realms/master"
                     audiences:
-                      - "api"
+                      - "account"
                     forward: true
-                    local_jwks:
-                      filename: "/etc/envoy/certs/jwks.json"
-                    # remote_jwks:
-                    #   http_uri:
-                    #     uri: "https://fgms-idsrv.fgms.dev.com:5095/.well-known/openid-configuration/jwks"
-                    #     cluster: auth_app
-                    #     timeout: 5s
+                    remote_jwks:
+                      http_uri:
+                        uri: "http://192.168.50.162:7070/auth/realms/master/protocol/openid-connect/certs"
+                        cluster: keycloak
+                        timeout: 5s
                 rules:
                   - match:
                       prefix: "/api/w"
@@ -87,6 +85,20 @@ static_resources:
               socket_address:
                 address: weather_service
                 port_value: 80
+ # Keycloak
+  - name: keycloak
+    connect_timeout: 0.25s
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: keycloak
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: 192.168.50.162
+                port_value: 7070
 
 admin:
   access_log_path: /tmp/admin_access.log
