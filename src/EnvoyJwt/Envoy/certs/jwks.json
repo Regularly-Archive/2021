@@ -1,0 +1,10 @@
+{
+    "keys": [
+        {
+            "kty": "oct",
+            "kid": "fff75e84-d5aa-4f5f-a495-fffec1de171f",
+            "k": "mpT9dPd_whWIz_ibNbjRuN24GyrOtOaaRnAfdTasx_4",
+            "alg": "HS256"
+        }
+    ]
+}

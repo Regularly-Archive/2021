@@ -1,0 +1,30 @@
+version: '3'
+services:
+  envoy_gateway:
+    build: Envoy/
+    ports:
+      - "9090:9090"
+      - "9091:9091"
+    volumes:
+      - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
+  city_service:
+    build: CityService/
+    ports:
+      - "8081:80"
+    environment:
+      ASPNETCORE_URLS: "http://+"
+      ASPNETCORE_ENVIRONMENT: "Development"
+  weather_service:
+    build: WeatherService/
+    ports:
+      - "8082:80"
+    environment:
+      ASPNETCORE_URLS: "http://+"
+      ASPNETCORE_ENVIRONMENT: "Development"
+  auth_service:
+    build: AuthService/
+    ports:
+      - "5000:80"    
+    environment:
+      ASPNETCORE_URLS: "http://+"
+      ASPNETCORE_ENVIRONMENT: "Development"
