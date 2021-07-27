@@ -11,7 +11,7 @@ namespace Caching.AOP.Core
 {
     public class CacheInterceptor : DispatchProxy
     {
-        public object RealProxy { get; set; }
+        public object RealObject { get; set; }
 
         public ICacheSerializer CacheSerializer;
 
@@ -30,7 +30,7 @@ namespace Caching.AOP.Core
 
             // void && Task
             if (returnType == typeof(void) || returnType == typeof(Task))
-                return targetMethod.Invoke(RealProxy, args);
+                return targetMethod.Invoke(RealObject, args);
 
             if (IsAsyncReturnValue(targetMethod))
                 returnType = targetMethod.ReturnType.GetGenericArguments()[0];
@@ -49,7 +49,7 @@ namespace Caching.AOP.Core
                     return CacheSerializer.Deserialize(cacheValue, returnType);
                 }
 
-                dynamic returnValue = targetMethod.Invoke(RealProxy, args);
+                dynamic returnValue = targetMethod.Invoke(RealObject, args);
                 cacheValue = CacheSerializer.Serialize(returnValue);
 
                 // Task<T>
@@ -61,7 +61,7 @@ namespace Caching.AOP.Core
                 return returnValue;
             }
 
-            return targetMethod.Invoke(RealProxy, args);
+            return targetMethod.Invoke(RealObject, args);
         }
 
         private string GetCacheKey(CacheableAttribute cacheableAttribute, MethodInfo methodInfo)

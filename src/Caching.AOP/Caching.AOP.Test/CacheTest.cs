@@ -2,7 +2,10 @@ using Caching.AOP.Core;
 using Caching.AOP.Core.Serialization;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Xunit;
@@ -24,7 +27,7 @@ namespace Caching.AOP.Test
             });
 
             var fakeServiceProxy = DispatchProxy.Create<IFakeService, CacheInterceptor>();
-            (fakeServiceProxy as CacheInterceptor).RealProxy = services.BuildServiceProvider().GetService<IFakeService>();
+            (fakeServiceProxy as CacheInterceptor).RealObject = services.BuildServiceProvider().GetService<IFakeService>();
             (fakeServiceProxy as CacheInterceptor).CacheSerializer = services.BuildServiceProvider().GetService<ICacheSerializer>();
             (fakeServiceProxy as CacheInterceptor).DistributedCache = services.BuildServiceProvider().GetService<IDistributedCache>();
 
@@ -45,5 +48,101 @@ namespace Caching.AOP.Test
             Assert.True(methodAnyVoid.ReturnType == typeof(void));
             Assert.True(methodAnyTask.ReturnType == typeof(Task));
         }
+
+        [Fact]
+        public async Task Test_DynamicProxy()
+        {
+            var services = new ServiceCollection();
+            services.AddTransient<IFooService, FooService>();
+            services.AddTransient(sp => new DynamicProxyFactory(sp));
+            services.AddTransient<IInterceptor, LoggerInterceptor>();
+
+            var serviceProvider = services.BuildServiceProvider();
+            var dynamicProxyFactory = serviceProvider.GetService<DynamicProxyFactory>();
+            var proxyObject = dynamicProxyFactory.Create<IFooService>(new Type[] { typeof(LoggerInterceptor) });
+            await proxyObject.Foo();
+        }
+    }
+
+    public class DynamicProxy<T> : DispatchProxy
+    {
+        private T RealObject => ServiceProvider.GetRequiredService<T>();
+
+        public IServiceProvider ServiceProvider { get; set; }
+
+        public IEnumerable<IInterceptor> Interceptors { get; set; }
+
+        protected override object Invoke(MethodInfo targetMethod, object[] args)
+        {
+            Interceptors?.ToList().ForEach(x => x.Intercept(targetMethod, args));
+            return targetMethod.Invoke(RealObject, args);
+        }
+    }
+
+    public class DynamicProxyFactory
+    {
+        private readonly IServiceProvider _serviceProvider;
+        public DynamicProxyFactory(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        public T Create<T>(Type[] interceptorTypes = null)
+        {
+            var proxyObject = DispatchProxy.Create<T, DynamicProxy<T>>();
+
+            (proxyObject as DynamicProxy<T>).ServiceProvider = _serviceProvider;
+
+            if (interceptorTypes == null || !interceptorTypes.Any())
+                return proxyObject;
+
+            var interceptors = BuildInterceptors(interceptorTypes);
+            (proxyObject as DynamicProxy<T>).Interceptors = interceptors;
+
+            return proxyObject;
+        }
+
+        public IEnumerable<IInterceptor> BuildInterceptors(Type[] interceptorTypes)
+        {
+            foreach (var interceptorType in interceptorTypes)
+            {
+                var interceptor = (IInterceptor)_serviceProvider.GetService(interceptorType);
+                if (interceptor != null)
+                    yield return interceptor;
+            }
+        }
+    }
+
+    public interface IFooService
+    {
+        Task<Bar> Foo();
+    }
+
+    public interface IInterceptor
+    {
+        void Intercept(MethodInfo targetMethod, object[] args);
+    }
+
+    public class FooService : IFooService
+    {
+        public Task<Bar> Foo()
+        {
+            return Task.FromResult(new Bar() { Id = 10, Address = "陕西省西安市雁塔区", Telephone = "12345678901" });
+        }
+    }
+
+    public class LoggerInterceptor : IInterceptor
+    {
+        public void Intercept(MethodInfo targetMethod, object[] args)
+        {
+            Console.WriteLine($"Invoke Method {targetMethod.Name}({JsonConvert.SerializeObject(args)})");
+        }
+    }
+
+    public class Bar
+    {
+        public int Id { get; set; }
+        public string Address { get; set; }
+        public string Telephone { get; set; }
     }
 }
