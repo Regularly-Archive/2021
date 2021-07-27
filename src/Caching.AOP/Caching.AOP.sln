@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31402.337
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.AOP.Core", "Caching.AOP.Core\Caching.AOP.Core.csproj", "{1A26078D-123E-4E53-9695-63C9A26888F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caching.AOP.Test", "Caching.AOP.Test\Caching.AOP.Test.csproj", "{F8B7D221-A4DB-4824-A42E-F8BF766B382B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A26078D-123E-4E53-9695-63C9A26888F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A26078D-123E-4E53-9695-63C9A26888F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A26078D-123E-4E53-9695-63C9A26888F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A26078D-123E-4E53-9695-63C9A26888F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8B7D221-A4DB-4824-A42E-F8BF766B382B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8B7D221-A4DB-4824-A42E-F8BF766B382B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8B7D221-A4DB-4824-A42E-F8BF766B382B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8B7D221-A4DB-4824-A42E-F8BF766B382B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {685C1B04-22EE-4505-9A20-56966317D397}
+	EndGlobalSection
+EndGlobal
