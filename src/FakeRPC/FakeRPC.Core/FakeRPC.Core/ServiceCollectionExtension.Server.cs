@@ -38,32 +38,7 @@ namespace FakeRpc.Core
             return services;
         }
 
-        public static void AddFakeRpcClient<TClient>(this IServiceCollection services, Action<HttpClient> configureClient)
-        {
-            services.AddHttpClient(typeof(TClient).Name.AsSpan().Slice(1).ToString(), configureClient);
-            services.AddSingleton<FakeRpcClientFactory>();
-        }
 
-        public static void AddDiscoryClient<TClient>(this IServiceCollection services)
-        {
-            services.AddSingleton<IRpcDiscoveryService, RpcDiscoveryService>();
-            services.AddSingleton<CSRedisClient>(sp =>
-            {
-                var client = new CSRedisClient("localhost:6379");
-                RedisHelper.Initialization(client);
-                return client;
-            });
-
-            var serviceProvider = services.BuildServiceProvider();
-            var serviceDiscovery = serviceProvider.GetService<IRpcDiscoveryService>();
-            var serviceUri = serviceDiscovery.GetService<TClient>();
-
-            services.AddFakeRpcClient<TClient>(options =>
-            {
-                options.BaseAddress = serviceUri;
-                options.DefaultRequestVersion = new Version(2, 0);
-            });
-        }
 
         public static IServiceCollection UseProtobuf(this IServiceCollection services)
         {
@@ -92,17 +67,11 @@ namespace FakeRpc.Core
             return services;
         }
 
-        public static void AddFakeRpcCallsFactory(this IServiceCollection services, Func<HttpClient,IFakeRpcCalls> factory = null)
-        {
-            if (factory == null)
-                factory = httpClient => new DefaultFakeRpcCalls(httpClient);
 
-            services.AddSingleton(factory);
-        }
 
-        public static void AddRpcDiscovery(this IServiceCollection services, Action<IRpcDiscoveryService> configureAction = null)
+        public static void AddRpcDiscovery(this IServiceCollection services, Action<IRpcServiceDiscovery> configureAction = null)
         {
-            services.AddSingleton<IRpcDiscoveryService, RpcDiscoveryService>();
+            services.AddSingleton<IRpcServiceDiscovery, RpcServiceDiscovery>();
             services.AddSingleton<CSRedisClient>(sp =>
             {
                 var client = new CSRedisClient("localhost:6379");
@@ -111,7 +80,7 @@ namespace FakeRpc.Core
             });
 
             var serviceProvider = services.BuildServiceProvider();
-            var serviceDiscovery = serviceProvider.GetService<IRpcDiscoveryService>();
+            var serviceDiscovery = serviceProvider.GetService<IRpcServiceDiscovery>();
             configureAction?.Invoke(serviceDiscovery);
         }
 

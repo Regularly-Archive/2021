@@ -32,8 +32,8 @@ namespace FakeRpc.Web
             services.AddFakeRpc().UseMessagePack().UseProtobuf();
             services.AddRpcDiscovery(serviceDiscovery =>
             {
-                serviceDiscovery.RegisterService<GreetService>(new Uri("http://localhost:5001"));
-                serviceDiscovery.RegisterService<CalculatorService>(new Uri("http://localhost:5001"));
+                serviceDiscovery.RegisterService<GreetService>(new Uri("https://localhost:5001"));
+                serviceDiscovery.RegisterService<CalculatorService>(new Uri("https://localhost:5001"));
             });
         }
 

@@ -27,9 +27,16 @@ namespace FakeRpc.Client
                 client.DefaultRequestVersion = new Version(2, 0);
             });
 
-            services.AddDiscoryClient<IGreetService>();
-
-            services.AddDiscoryClient<ICalculatorService>();
+            services.AddFakeRpcClient<IGreetService>(new ServiceDiscoveryOptions() 
+            { 
+                DiscoveryServer = "localhost:6379",
+                ServiceNamespace = typeof(GreetService).Namespace
+            });
+            services.AddFakeRpcClient<ICalculatorService>(new ServiceDiscoveryOptions() 
+            { 
+                DiscoveryServer = "localhost:6379",
+                ServiceNamespace = typeof(CalculatorService).Namespace
+            });
 
             services.AddFakeRpcCallsFactory(MessagePackRpcCalls.Factory);
 

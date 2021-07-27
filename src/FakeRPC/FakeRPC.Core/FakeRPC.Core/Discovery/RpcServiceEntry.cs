@@ -10,5 +10,6 @@ namespace FakeRpc.Core.Discovery
         public Uri ServiceUri { get; set; }
         public Guid ServiceId { get; set; }
         public string ServiceName { get; set; }
+        public string ServiceNamespace { get; set; }
     }
 }
