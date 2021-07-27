@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Caching.AOP.Test
@@ -33,6 +34,16 @@ namespace Caching.AOP.Test
                 var student = fakeServiceProxy.GetStudentById(1);
                 var isPassed = fakeServiceProxy.IsGradePassed(1);
             }
+        }
+
+        [Fact]
+        public void Test_Void_Task_ReturnType()
+        {
+            var methodAnyVoid = typeof(FakeService).GetMethod("AnyVoid");
+            var methodAnyTask = typeof(FakeService).GetMethod("AnyTask");
+
+            Assert.True(methodAnyVoid.ReturnType == typeof(void));
+            Assert.True(methodAnyTask.ReturnType == typeof(Task));
         }
     }
 }

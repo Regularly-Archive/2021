@@ -8,6 +8,16 @@ namespace Caching.AOP.Test
 {
     public class FakeService : IFakeService
     {
+        public Task AnyTask()
+        {
+            return Task.CompletedTask;
+        }
+
+        public void AnyVoid()
+        {
+            Console.WriteLine("Method AnyVoid is invoked!");
+        }
+
         [Cacheable(CacheKeyPrefix = "Fake")]
         public List<string> GetColors()
         {

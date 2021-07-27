@@ -27,6 +27,11 @@ namespace Caching.AOP.Core
         {
             byte[] cacheValue;
             var returnType = targetMethod.ReturnType;
+
+            // void && Task
+            if (returnType == typeof(void) || returnType == typeof(Task))
+                return targetMethod.Invoke(RealProxy, args);
+
             if (IsAsyncReturnValue(targetMethod))
                 returnType = targetMethod.ReturnType.GetGenericArguments()[0];
 

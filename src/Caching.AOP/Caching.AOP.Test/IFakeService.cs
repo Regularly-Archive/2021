@@ -17,6 +17,10 @@ namespace Caching.AOP.Test
 
         [Cacheable(CacheKeyPrefix = "Fake", Expiration = 180)]
         Task<bool> IsGradePassed(int id);
+
+        Task AnyTask();
+
+        void AnyVoid();
     }
 
     [ProtoContract]
