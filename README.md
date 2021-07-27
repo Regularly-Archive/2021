@@ -14,5 +14,6 @@ Non-formal Project of 2021
 * [gRPC + Envoy实现RPC服务的RESTful化](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/EnvoyGrpc)
 * [gRPC + Envoy实现微服务的监控预警](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/EnvoyMonitor)
 * [ASP.NET Core + Envoy实现微服务的认证](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/EnvoyJwt)
+* [基于 AOP 的缓存组件](https://hub.fastgit.org/Regularly-Archive/2021/tree/master/src/Caching.AOP)
 
 
