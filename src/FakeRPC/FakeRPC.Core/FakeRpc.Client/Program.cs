@@ -27,6 +27,10 @@ namespace FakeRpc.Client
                 client.DefaultRequestVersion = new Version(2, 0);
             });
 
+            services.AddDiscoryClient<IGreetService>();
+
+            services.AddDiscoryClient<ICalculatorService>();
+
             services.AddFakeRpcCallsFactory(MessagePackRpcCalls.Factory);
 
 

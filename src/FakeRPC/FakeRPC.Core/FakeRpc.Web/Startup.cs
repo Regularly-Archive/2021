@@ -30,6 +30,11 @@ namespace FakeRpc.Web
         {
             services.AddControllersWithViews();
             services.AddFakeRpc().UseMessagePack().UseProtobuf();
+            services.AddRpcDiscovery(serviceDiscovery =>
+            {
+                serviceDiscovery.RegisterService<GreetService>(new Uri("http://localhost:5001"));
+                serviceDiscovery.RegisterService<CalculatorService>(new Uri("http://localhost:5001"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -24,13 +24,13 @@ namespace FakeRpc.Core.Client
         public TClient Create<TClient>(Func<HttpClient, IFakeRpcCalls> rpcCallsFactory = null)
         {
             var httpClientFactory = _serviceProvider.GetService<IHttpClientFactory>();
-            var httpClient = httpClientFactory.CreateClient(GetServiceName<TClient>());
+            var httpClient = httpClientFactory.CreateClient(typeof(TClient).GetServiceName());
             if (rpcCallsFactory == null)
                 rpcCallsFactory = _serviceProvider.GetService<Func<HttpClient, IFakeRpcCalls>>();
 
             var clientProxy = DispatchProxy.Create<TClient, ClientProxyBase>();
             (clientProxy as ClientProxyBase).HttpClient = httpClient;
-            (clientProxy as ClientProxyBase).ServiceName = GetServiceName<TClient>();
+            (clientProxy as ClientProxyBase).ServiceName = typeof(TClient).GetServiceName();
             (clientProxy as ClientProxyBase).RpcCalls = rpcCallsFactory == null ? 
                 new DefaultFakeRpcCalls(httpClient) : rpcCallsFactory(httpClient);
 
@@ -45,7 +45,7 @@ namespace FakeRpc.Core.Client
                 rpcCallsFactory = _serviceProvider.GetService<Func<HttpClient, IFakeRpcCalls>>();
 
             (clientProxy as ClientProxyBase).HttpClient = new HttpClient() { BaseAddress = baseUri };
-            (clientProxy as ClientProxyBase).ServiceName = GetServiceName<TClient>();
+            (clientProxy as ClientProxyBase).ServiceName = typeof(TClient).GetServiceName();
             (clientProxy as ClientProxyBase).RpcCalls = rpcCallsFactory == null ?
                 new DefaultFakeRpcCalls(httpClient) : rpcCallsFactory(httpClient);
 
@@ -58,12 +58,6 @@ namespace FakeRpc.Core.Client
             return Create<TClient>(baseUri, rpcCallsFactory);
         }
 
-        private string GetServiceName<TClient>()
-        {
-            if (!typeof(TClient).IsInterface)
-                return typeof(TClient).Name;
 
-            return typeof(TClient).Name.AsSpan().Slice(1).ToString();
-        }
     }
 }

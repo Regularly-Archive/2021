@@ -1,4 +1,6 @@
-﻿using FakeRpc.Core.Client;
+﻿using CSRedis;
+using FakeRpc.Core.Client;
+using FakeRpc.Core.Discovery;
 using FakeRpc.Core.Mvc;
 using FakeRpc.Core.Mvc.MessagePack;
 using FakeRpc.Core.Mvc.Protobuf;
@@ -42,6 +44,27 @@ namespace FakeRpc.Core
             services.AddSingleton<FakeRpcClientFactory>();
         }
 
+        public static void AddDiscoryClient<TClient>(this IServiceCollection services)
+        {
+            services.AddSingleton<IRpcDiscoveryService, RpcDiscoveryService>();
+            services.AddSingleton<CSRedisClient>(sp =>
+            {
+                var client = new CSRedisClient("localhost:6379");
+                RedisHelper.Initialization(client);
+                return client;
+            });
+
+            var serviceProvider = services.BuildServiceProvider();
+            var serviceDiscovery = serviceProvider.GetService<IRpcDiscoveryService>();
+            var serviceUri = serviceDiscovery.GetService<TClient>();
+
+            services.AddFakeRpcClient<TClient>(options =>
+            {
+                options.BaseAddress = serviceUri;
+                options.DefaultRequestVersion = new Version(2, 0);
+            });
+        }
+
         public static IServiceCollection UseProtobuf(this IServiceCollection services)
         {
             services.Configure<MvcOptions>(options =>
@@ -76,5 +99,29 @@ namespace FakeRpc.Core
 
             services.AddSingleton(factory);
         }
+
+        public static void AddRpcDiscovery(this IServiceCollection services, Action<IRpcDiscoveryService> configureAction = null)
+        {
+            services.AddSingleton<IRpcDiscoveryService, RpcDiscoveryService>();
+            services.AddSingleton<CSRedisClient>(sp =>
+            {
+                var client = new CSRedisClient("localhost:6379");
+                RedisHelper.Initialization(client);
+                return client;
+            });
+
+            var serviceProvider = services.BuildServiceProvider();
+            var serviceDiscovery = serviceProvider.GetService<IRpcDiscoveryService>();
+            configureAction?.Invoke(serviceDiscovery);
+        }
+
+        public static string GetServiceName(this Type type)
+        {
+            if (!type.IsInterface)
+                return type.Name;
+
+            return type.Name.AsSpan().Slice(1).ToString();
+        }
+
     }
 }
