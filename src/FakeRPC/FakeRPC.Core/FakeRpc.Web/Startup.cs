@@ -13,6 +13,8 @@ using FakeRpc.Core;
 using System.Net.Http;
 using FakeRpc.Web.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using FakeRpc.Core.Registry;
+using CSRedis;
 
 namespace FakeRpc.Web
 {
@@ -29,12 +31,19 @@ namespace FakeRpc.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddFakeRpc().UseMessagePack().UseProtobuf();
-            services.AddRpcDiscovery(serviceDiscovery =>
+            services.AddSingleton<CSRedisClient>(sp =>
             {
-                serviceDiscovery.RegisterService<GreetService>(new Uri("https://localhost:5001"));
-                serviceDiscovery.RegisterService<CalculatorService>(new Uri("https://localhost:5001"));
+                var client = new CSRedisClient("localhost:6379");
+                RedisHelper.Initialization(client);
+                return client;
             });
+
+            var builder = new FakeRpcServerBuilder(services);
+            builder.AddFakeRpc()
+                .UseMessagePack()
+                .UseUseProtobuf()
+                .EnableServiceRegistry<RedisServiceRegistry>();
+            builder.Build();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

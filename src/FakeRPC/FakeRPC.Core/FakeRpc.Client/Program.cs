@@ -15,30 +15,33 @@ namespace FakeRpc.Client
         static async Task Main(string[] args)
         {
             var services = new ServiceCollection();
-            services.AddFakeRpcClient<IGreetService>(client =>
+
+            var builder = new FakeRpcClientBuilder(services);
+
+            builder.AddRpcClient<IGreetService>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:5001");
                 client.DefaultRequestVersion = new Version(2, 0);
             });
 
-            services.AddFakeRpcClient<ICalculatorService>(client =>
+            builder.AddRpcClient<ICalculatorService>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:5001");
                 client.DefaultRequestVersion = new Version(2, 0);
             });
 
-            services.AddFakeRpcClient<IGreetService>(new ServiceDiscoveryOptions() 
-            { 
-                DiscoveryServer = "localhost:6379",
-                ServiceNamespace = typeof(GreetService).Namespace
-            });
-            services.AddFakeRpcClient<ICalculatorService>(new ServiceDiscoveryOptions() 
-            { 
-                DiscoveryServer = "localhost:6379",
-                ServiceNamespace = typeof(CalculatorService).Namespace
-            });
+            //services.AddFakeRpcClient<IGreetService>(new ServiceDiscoveryOptions() 
+            //{ 
+            //    DiscoveryServer = "localhost:6379",
+            //    ServiceNamespace = typeof(GreetService).Namespace
+            //});
+            //services.AddFakeRpcClient<ICalculatorService>(new ServiceDiscoveryOptions() 
+            //{ 
+            //    DiscoveryServer = "localhost:6379",
+            //    ServiceNamespace = typeof(CalculatorService).Namespace
+            ///});
 
-            services.AddFakeRpcCallsFactory(MessagePackRpcCalls.Factory);
+           builder.AddRpcCallsFactory(MessagePackRpcCalls.Factory);
 
 
             var serviceProvider = services.BuildServiceProvider();

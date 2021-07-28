@@ -19,7 +19,6 @@ namespace FakeRpc.Core
 
         public virtual async Task<TResponse> CallAsync<TRequest, TResponse>(Uri uri, TRequest request)
         {
-
             var payload = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(payload);
             httpContent.Headers.ContentType = new MediaTypeHeaderValue(FakeRpcMediaTypes.Default);
