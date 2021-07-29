@@ -15,6 +15,7 @@ using FakeRpc.Web.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using FakeRpc.Core.Registry;
 using CSRedis;
+using org.apache.zookeeper;
 
 namespace FakeRpc.Web
 {
@@ -39,10 +40,7 @@ namespace FakeRpc.Web
             });
 
             var builder = new FakeRpcServerBuilder(services);
-            builder.AddFakeRpc()
-                .UseMessagePack()
-                .UseUseProtobuf()
-                .EnableServiceRegistry<RedisServiceRegistry>();
+            builder.AddFakeRpc().UseMessagePack().UseUseProtobuf().EnableServiceRegistry<RedisServiceRegistry>();
             builder.Build();
         }
 

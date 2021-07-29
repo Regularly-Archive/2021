@@ -76,11 +76,11 @@ namespace FakeRpc.Core.Registry
             return UnregisterAsync(serviceRegistration);
         }
 
-        protected string GetServiceRegistryKey(string serviceName)
+        protected string GetServiceRegistryKey(string serviceGroup, string serviceName)
         {
             var firstLetter = serviceName.AsSpan().Slice(0, 1).ToString().ToLower();
             var otherLetters = serviceName.AsSpan().Slice(1).ToString();
-            return $"rpc:services:{firstLetter}{otherLetters}";
+            return $"rpc:services:{serviceGroup}:{firstLetter}{otherLetters}";
         }
     }
 }
