@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using FakeRpc.Core.Registry;
 using CSRedis;
 using org.apache.zookeeper;
+using FakeRpc.Core.Registry.Redis;
+using FakeRpc.Core.Registry.Consul;
 
 namespace FakeRpc.Web
 {
@@ -32,15 +34,16 @@ namespace FakeRpc.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddSingleton<CSRedisClient>(sp =>
-            {
-                var client = new CSRedisClient("localhost:6379");
-                RedisHelper.Initialization(client);
-                return client;
-            });
 
             var builder = new FakeRpcServerBuilder(services);
-            builder.AddFakeRpc().UseMessagePack().UseUseProtobuf().EnableServiceRegistry<RedisServiceRegistry>();
+            builder
+                .AddFakeRpc()
+                .UseMessagePack()
+                .UseUseProtobuf()
+                .EnableRedisServiceRegistry(new RedisServiceRegistryOptions
+                {
+                    RedisUrl = "localhost:6379"
+                });
             builder.Build();
         }
 

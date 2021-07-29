@@ -82,5 +82,24 @@ namespace FakeRpc.Core.Registry
             var otherLetters = serviceName.AsSpan().Slice(1).ToString();
             return $"rpc:services:{serviceGroup}:{firstLetter}{otherLetters}";
         }
+
+        protected T GetAsyncResult<T>(Func<Task<T>> func)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            var task = tcs.Task;
+            Task.Run(async () =>
+            {
+                var result = await func.Invoke();
+                tcs.SetResult(result);
+            })
+            .Wait();
+
+            return task.Result;
+        }
+
+        protected Task GetAsyncResult(Func<Task> func)
+        {
+            return Task.Run(async () => await func.Invoke());
+        }
     }
 }

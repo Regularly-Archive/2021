@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FakeRpc.Core.Registry
+namespace FakeRpc.Core.Registry.Zookeeper
 {
     public class ZookeeperServiceRegistry : BaseServiceRegistry
     {
@@ -67,25 +67,6 @@ namespace FakeRpc.Core.Registry
                 }
             }
         }
-
-        private T GetAsyncResult<T>(Func<Task<T>> func)
-        {
-            var tcs = new TaskCompletionSource<T>();
-            var task = tcs.Task;
-            Task.Run(async () =>
-            {
-                var result = await func.Invoke();
-                tcs.SetResult(result);
-            });
-
-            return task.Result;
-        }
-
-        private Task GetAsyncResult(Func<Task> func)
-        {
-            return Task.Run(async () => await func.Invoke());
-        }
-
 
         private IEnumerable<T> GetListByZookeeper<T>(ChildrenResult childrenResult)
         {

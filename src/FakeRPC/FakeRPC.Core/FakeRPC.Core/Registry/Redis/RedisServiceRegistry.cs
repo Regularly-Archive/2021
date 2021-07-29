@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FakeRpc.Core.Registry
+namespace FakeRpc.Core.Registry.Redis
 {
     public class RedisServiceRegistry : BaseServiceRegistry
     {

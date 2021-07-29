@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Consul" Version="1.6.10.2" />
     <PackageReference Include="CSRedisCore" Version="3.6.6" />
     <PackageReference Include="MessagePack" Version="2.2.85" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />

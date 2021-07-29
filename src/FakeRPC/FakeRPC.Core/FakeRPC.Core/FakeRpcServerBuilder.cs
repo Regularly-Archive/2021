@@ -1,8 +1,12 @@
-﻿using FakeRpc.Core.Discovery;
+﻿using Consul;
+using CSRedis;
+using FakeRpc.Core.Discovery;
 using FakeRpc.Core.Mvc;
 using FakeRpc.Core.Mvc.MessagePack;
 using FakeRpc.Core.Mvc.Protobuf;
 using FakeRpc.Core.Registry;
+using FakeRpc.Core.Registry.Consul;
+using FakeRpc.Core.Registry.Redis;
 using MessagePack;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -77,6 +81,31 @@ namespace FakeRpc.Core
 
             return this;
         }
+
+        public FakeRpcServerBuilder EnableRedisServiceRegistry(RedisServiceRegistryOptions options)
+        {
+            _services.AddSingleton<CSRedisClient>(_ =>
+            {
+                var client = new CSRedisClient(options.RedisUrl);
+                RedisHelper.Initialization(client);
+                return client;
+            });
+
+            _services.AddSingleton<IServiceRegistry, RedisServiceRegistry>();
+            return this;
+        }
+
+        public FakeRpcServerBuilder EnableConsulServiceRegistry(ConsulServiceRegistryOptions options)
+        {
+            _services.AddSingleton<IConsulClient, ConsulClient>(_ => new ConsulClient(consulConfig =>
+            {
+                consulConfig.Address = new Uri(options.BaseUrl);
+            }));
+
+            _services.AddSingleton<IServiceRegistry, ConsulServiceRegistry>();
+            return this;
+        }
+
 
         public void Build()
         {
