@@ -1,5 +1,7 @@
 ﻿using FakeRpc.Core;
 using FakeRpc.Core.Client;
+using FakeRpc.Core.Discovery;
+using FakeRpc.Core.Discovery.Consul;
 using FakeRpc.Core.Mvc;
 using FakeRpc.Web.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,10 +44,16 @@ namespace FakeRpc.Client
             ///});
 
            builder.AddRpcCallsFactory(MessagePackRpcCalls.Factory);
-
+            builder.EnableConsulServiceDiscovery(new ConsulServiceDiscoveryOptions()
+            {
+                BaseUrl = "http://localhost:8500"
+            });
 
             var serviceProvider = services.BuildServiceProvider();
             var clientFactory = serviceProvider.GetService<FakeRpcClientFactory>();
+
+            var serviceDiscovery = serviceProvider.GetService<IServiceDiscovery>();
+            serviceDiscovery.GetService("CalculatorService", "FakeRpc.Web.Services");
 
 
             // Client With MessagePack

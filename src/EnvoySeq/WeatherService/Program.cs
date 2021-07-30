@@ -1,14 +1,13 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace FakeRpc.Web
+namespace WeatherService
 {
     public class Program
     {
@@ -21,11 +20,6 @@ namespace FakeRpc.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureKestrel(options =>
-                    {
-                        options.ListenAnyIP(5000, x => x.Protocols = HttpProtocols.Http1);
-                        options.ListenAnyIP(5001, x => x.Protocols = HttpProtocols.Http2);
-                    });
                     webBuilder.UseStartup<Startup>();
                 });
     }

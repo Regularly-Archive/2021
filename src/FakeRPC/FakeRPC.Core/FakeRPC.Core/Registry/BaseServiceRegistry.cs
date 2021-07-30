@@ -76,30 +76,26 @@ namespace FakeRpc.Core.Registry
             return UnregisterAsync(serviceRegistration);
         }
 
-        protected string GetServiceRegistryKey(string serviceGroup, string serviceName)
+        public virtual string GetServiceRegistryKey(string serviceGroup, string serviceName)
         {
             var firstLetter = serviceName.AsSpan().Slice(0, 1).ToString().ToLower();
             var otherLetters = serviceName.AsSpan().Slice(1).ToString();
             return $"rpc:services:{serviceGroup}:{firstLetter}{otherLetters}";
         }
+    }
 
-        protected T GetAsyncResult<T>(Func<Task<T>> func)
+    public static class AsyncHelper
+    {
+        private static readonly TaskFactory _factory = new TaskFactory(CancellationToken.None, TaskCreationOptions.None, TaskContinuationOptions.None, TaskScheduler.Default);
+
+        public static void RunSync(Func<Task> func)
         {
-            var tcs = new TaskCompletionSource<T>();
-            var task = tcs.Task;
-            Task.Run(async () =>
-            {
-                var result = await func.Invoke();
-                tcs.SetResult(result);
-            })
-            .Wait();
-
-            return task.Result;
+            _factory.StartNew(func).Unwrap().GetAwaiter().GetResult();
         }
 
-        protected Task GetAsyncResult(Func<Task> func)
+        public static TResult RunSync<TResult>(Func<Task<TResult>> func)
         {
-            return Task.Run(async () => await func.Invoke());
+            return _factory.StartNew(func).Unwrap().GetAwaiter().GetResult();
         }
     }
 }

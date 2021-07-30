@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CSRedis;
 using Microsoft.Extensions.Logging;
 
-namespace FakeRpc.Core.Discovery
+namespace FakeRpc.Core.Discovery.Redis
 {
     public class RedisServiceDiscovery : BaseServiceDiscovey
     {

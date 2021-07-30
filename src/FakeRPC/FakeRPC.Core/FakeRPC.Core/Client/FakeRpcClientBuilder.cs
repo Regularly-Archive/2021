@@ -1,5 +1,7 @@
-﻿using FakeRpc.Core.Client;
+﻿using Consul;
+using FakeRpc.Core.Client;
 using FakeRpc.Core.Discovery;
+using FakeRpc.Core.Discovery.Consul;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -56,7 +58,7 @@ namespace FakeRpc.Core.Client
             return this;
         }
 
-        public FakeRpcClientBuilder EnableServiceDiscovery<TServiceDiscovery>(Func<IServiceProvider, TServiceDiscovery> serviceDiscoveryFactory = null) where TServiceDiscovery : class, IServiceDiscovery
+        public FakeRpcClientBuilder EnableConsulServiceDiscovery<TServiceDiscovery>(Func<IServiceProvider, TServiceDiscovery> serviceDiscoveryFactory = null) where TServiceDiscovery : class, IServiceDiscovery
         {
             if (serviceDiscoveryFactory != null)
                 _services.AddSingleton<TServiceDiscovery>(serviceDiscoveryFactory);
@@ -65,6 +67,18 @@ namespace FakeRpc.Core.Client
 
             return this;
         }
+
+        public FakeRpcClientBuilder EnableConsulServiceDiscovery(ConsulServiceDiscoveryOptions options)
+        {
+            _services.AddSingleton<IConsulClient, ConsulClient>(_ => new ConsulClient(consulConfig =>
+            {
+                consulConfig.Address = new Uri(options.BaseUrl);
+            }));
+
+            _services.AddSingleton<IServiceDiscovery, ConsulServiceDiscovery>();
+            return this;
+        }
+
 
         public void Build()
         {
