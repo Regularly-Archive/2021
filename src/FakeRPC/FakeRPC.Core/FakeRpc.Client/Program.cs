@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using FakeRpc.Core;
 using FakeRpc.Core.Client;
@@ -24,6 +25,12 @@ namespace FakeRpc.Client
         }
     }
 
+    [MemoryDiagnoser]
+    [SimpleJob(RuntimeMoniker.Net472, baseline: true)]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31)]
+    [SimpleJob(RuntimeMoniker.Net50)]
+    [SimpleJob(RuntimeMoniker.CoreRt30)]
+    [RPlotExporter]
     public class TestContext
     {
         public IServiceProvider InitIoc()

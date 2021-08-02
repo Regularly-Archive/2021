@@ -12,8 +12,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="protobuf-net" Version="3.0.101" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
-    <PackageReference Include="ZooKeeperNetEx" Version="3.4.12.4" />
-    <PackageReference Include="ZooKeeperNetEx.Recipes" Version="3.4.12.4" />
   </ItemGroup>
 
 </Project>

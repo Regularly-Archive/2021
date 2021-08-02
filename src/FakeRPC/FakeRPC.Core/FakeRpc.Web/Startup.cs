@@ -15,7 +15,6 @@ using FakeRpc.Web.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using FakeRpc.Core.Registry;
 using CSRedis;
-using org.apache.zookeeper;
 using FakeRpc.Core.Registry.Redis;
 using FakeRpc.Core.Registry.Consul;
 
