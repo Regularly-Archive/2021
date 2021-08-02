@@ -21,11 +21,6 @@ namespace FakeRpc.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureKestrel(options =>
-                    {
-                        options.ListenAnyIP(5000, x => x.Protocols = HttpProtocols.Http1);
-                        options.ListenAnyIP(5001, x => x.Protocols = HttpProtocols.Http2);
-                    });
                     webBuilder.UseStartup<Startup>();
                 });
     }

@@ -43,7 +43,7 @@ namespace FakeRpc.Web.Services
             var operators = new string[] { "+", "-", "*", "/" };
             var random = new Random();
             var num1 = random.Next(0, 100);
-            var num2 = random.Next(0, 100);
+            var num2 = random.Next(1, 100);
             var op = operators[random.Next(operators.Length)];
             return Calculate(new CalculatorRequest() { Num1 = num1, Num2 = num2, Op = op });
         }

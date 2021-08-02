@@ -1,7 +1,10 @@
-﻿using FakeRpc.Core;
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
+using FakeRpc.Core;
 using FakeRpc.Core.Client;
 using FakeRpc.Core.Discovery;
 using FakeRpc.Core.Discovery.Consul;
+using FakeRpc.Core.LoadBalance;
 using FakeRpc.Core.Mvc;
 using FakeRpc.Web.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +17,16 @@ namespace FakeRpc.Client
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
+        {
+            BenchmarkRunner.Run<TestContext>();
+            Console.ReadKey();
+        }
+    }
+
+    public class TestContext
+    {
+        public IServiceProvider InitIoc()
         {
             var services = new ServiceCollection();
 
@@ -23,71 +35,60 @@ namespace FakeRpc.Client
             builder.AddRpcClient<IGreetService>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:5001");
-                client.DefaultRequestVersion = new Version(2, 0);
+                client.DefaultRequestVersion = new Version(1, 0);
             });
 
             builder.AddRpcClient<ICalculatorService>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:5001");
-                client.DefaultRequestVersion = new Version(2, 0);
+                client.DefaultRequestVersion = new Version(1, 0);
             });
 
-            //services.AddFakeRpcClient<IGreetService>(new ServiceDiscoveryOptions() 
-            //{ 
-            //    DiscoveryServer = "localhost:6379",
-            //    ServiceNamespace = typeof(GreetService).Namespace
-            //});
-            //services.AddFakeRpcClient<ICalculatorService>(new ServiceDiscoveryOptions() 
-            //{ 
-            //    DiscoveryServer = "localhost:6379",
-            //    ServiceNamespace = typeof(CalculatorService).Namespace
-            ///});
-
-           builder.AddRpcCallsFactory(MessagePackRpcCalls.Factory);
+            builder.AddRpcCallsFactory(MessagePackRpcCalls.Factory);
+            builder.EnableLoadBalance<RandomLoadBalanceStrategy>();
             builder.EnableConsulServiceDiscovery(new ConsulServiceDiscoveryOptions()
             {
-                BaseUrl = "http://localhost:8500"
+                BaseUrl = "http://localhost:8500",
+                UseHttps = true
             });
 
-            var serviceProvider = services.BuildServiceProvider();
-            var clientFactory = serviceProvider.GetService<FakeRpcClientFactory>();
+            return services.BuildServiceProvider();
+        }
 
-            var serviceDiscovery = serviceProvider.GetService<IServiceDiscovery>();
-            serviceDiscovery.GetService("CalculatorService", "FakeRpc.Web.Services");
-
-
-            // Client With MessagePack
-            var watch = new Stopwatch();
-            watch.Start();
-            var greetProxy = clientFactory.Create<IGreetService>(MessagePackRpcCalls.Factory);
+        [Benchmark]
+        public async Task RunMessagePack()
+        {
+            var serviceProvider = InitIoc();
+            var _clientFactory = serviceProvider.GetService<FakeRpcClientFactory>();
+            var greetProxy = _clientFactory.Create<IGreetService>(MessagePackRpcCalls.Factory);
             var reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
             reply = await greetProxy.SayWho();
-            var calculatorProxy = clientFactory.Create<ICalculatorService>(MessagePackRpcCalls.Factory);
+            var calculatorProxy = _clientFactory.Create<ICalculatorService>(MessagePackRpcCalls.Factory);
             var result = calculatorProxy.Random();
-            watch.Stop();
-            Console.WriteLine($"MessagePack + HTTP/2 using {watch.ElapsedMilliseconds} ms");
+        }
 
-            // Client With Protobuf
-            watch = new Stopwatch();
-            watch.Start();
-            greetProxy = clientFactory.Create<IGreetService>(ProtobufRpcCalls.Factory);
-            reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
+        [Benchmark]
+        public async Task RunProtobuf()
+        {
+            var serviceProvider = InitIoc();
+            var _clientFactory = serviceProvider.GetService<FakeRpcClientFactory>();
+            var greetProxy = _clientFactory.Create<IGreetService>(ProtobufRpcCalls.Factory);
+            var reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
             reply = await greetProxy.SayWho();
-            calculatorProxy = clientFactory.Create<ICalculatorService>(ProtobufRpcCalls.Factory);
-            result = calculatorProxy.Random();
-            watch.Stop();
-            Console.WriteLine($"Protobuff + HTTP/2 using {watch.ElapsedMilliseconds} ms");
+            var calculatorProxy = _clientFactory.Create<ICalculatorService>(ProtobufRpcCalls.Factory);
+            var result = calculatorProxy.Random();
+        }
 
-            // Client With Json
-            watch = new Stopwatch();
-            watch.Start();
-            greetProxy = clientFactory.Create<IGreetService>(DefaultFakeRpcCalls.Factory);
-            reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
+        [Benchmark]
+        public async Task RunJson()
+        {
+            var serviceProvider = InitIoc();
+            var _clientFactory = serviceProvider.GetService<FakeRpcClientFactory>();
+            var greetProxy = _clientFactory.Create<IGreetService>(DefaultFakeRpcCalls.Factory);
+            var reply = await greetProxy.SayHello(new HelloRequest() { Name = "张三" });
             reply = await greetProxy.SayWho();
-            calculatorProxy = clientFactory.Create<ICalculatorService>(DefaultFakeRpcCalls.Factory);
-            result = calculatorProxy.Random();
-            watch.Stop();
-            Console.WriteLine($"JSON + HTTP/2 using {watch.ElapsedMilliseconds} ms");
+            var calculatorProxy = _clientFactory.Create<ICalculatorService>(DefaultFakeRpcCalls.Factory);
+            var result = calculatorProxy.Random();
         }
     }
 }

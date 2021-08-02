@@ -6,7 +6,7 @@ namespace FakeRpc.Core.Discovery
 {
     public class BaseServiceDiscovey : IServiceDiscovery
     {
-        public Uri GetService<TService>(string serviceGroup = null)
+        public IEnumerable<Uri> GetService<TService>(string serviceGroup = null)
         {
             if (string.IsNullOrEmpty(serviceGroup))
                 serviceGroup = typeof(TService).Namespace;
@@ -15,7 +15,7 @@ namespace FakeRpc.Core.Discovery
             return GetService(serviceName, serviceGroup);
         }
 
-        public virtual Uri GetService(string serviceName, string serviceGroup)
+        public virtual IEnumerable<Uri> GetService(string serviceName, string serviceGroup)
         {
             throw new NotImplementedException();
         }

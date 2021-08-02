@@ -2,6 +2,7 @@
 using FakeRpc.Core.Client;
 using FakeRpc.Core.Discovery;
 using FakeRpc.Core.Discovery.Consul;
+using FakeRpc.Core.LoadBalance;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -70,12 +71,19 @@ namespace FakeRpc.Core.Client
 
         public FakeRpcClientBuilder EnableConsulServiceDiscovery(ConsulServiceDiscoveryOptions options)
         {
+            _services.AddSingleton(options);
             _services.AddSingleton<IConsulClient, ConsulClient>(_ => new ConsulClient(consulConfig =>
             {
                 consulConfig.Address = new Uri(options.BaseUrl);
             }));
 
             _services.AddSingleton<IServiceDiscovery, ConsulServiceDiscovery>();
+            return this;
+        }
+
+        public FakeRpcClientBuilder EnableLoadBalance<TStrategy>() where TStrategy: class, ILoadBalanceStrategy
+        {
+            _services.AddTransient<ILoadBalanceStrategy, TStrategy>();
             return this;
         }
 

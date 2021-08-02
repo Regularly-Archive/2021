@@ -20,16 +20,16 @@ namespace FakeRpc.Core.Discovery.Redis
             _logger = logger;
         }
 
-        public override Uri GetService(string serviceName, string serviceGroup)
+        public override IEnumerable<Uri> GetService(string serviceName, string serviceGroup)
         {
             var serviceDiscoveryKey = GetServiceDiscoveryKey(serviceName);
             var serviceNodes = _redisClient.SMembers<ServiceRegistration>(serviceDiscoveryKey);
-            var serviceNode = serviceNodes.FirstOrDefault(x => x.ServiceGroup == serviceGroup);
-            if (serviceNode == null)
+            serviceNodes = serviceNodes.Where(x => x.ServiceGroup == serviceGroup).ToArray();
+            if (serviceNodes == null)
                 throw new ArgumentException($"Service {serviceGroup}.{serviceName} can't be resolved.");
 
-            _logger.LogInformation($"Discovery {serviceGroup}.{serviceName} {serviceNode.ServiceUri} ...");
-            return serviceNode.ServiceUri;
+            _logger.LogInformation($"Discovery {serviceNodes.Count()} instances for {serviceName} ...");
+            return serviceNodes.Select(x => x.ServiceUri);
         }
     }
 }

@@ -9,24 +9,25 @@ namespace FakeRpc.Core.Discovery.Consul
 {
     public class ConsulServiceDiscovery : BaseServiceDiscovey
     {
-        private IConsulClient _consulClient;
-        public ConsulServiceDiscovery(IConsulClient consulClient)
+        private readonly IConsulClient _consulClient;
+        private readonly ConsulServiceDiscoveryOptions _options;
+        public ConsulServiceDiscovery(IConsulClient consulClient, ConsulServiceDiscoveryOptions options)
         {
             _consulClient = consulClient;
+            _options = options;
         }
 
-        public override Uri GetService(string serviceName, string serviceGroup)
+        public override IEnumerable<Uri> GetService(string serviceName, string serviceGroup)
         {
+            var schema = _options.UseHttps ? "https" : "http";
             var services = AsyncHelper.RunSync<QueryResult<ServiceEntry[]>>(() => _consulClient.Health.Service(serviceName));
             var serviceUrls = services.Response
                 .ToList()
                 .Where(x => x.Service.Tags.Contains(serviceGroup))
-                .Select(x => new Uri($"https://{x.Service.Address}:{x.Service.Port}"))
-                .ToList(); ;
+                .Select(x => new Uri($"{schema}://{x.Service.Address}:{x.Service.Port}"))
+                .ToList();
 
-            var rand = new Random();
-            var index = rand.Next(0, serviceUrls.Count);
-            return serviceUrls[index];
+            return serviceUrls;
         }
     }
 }

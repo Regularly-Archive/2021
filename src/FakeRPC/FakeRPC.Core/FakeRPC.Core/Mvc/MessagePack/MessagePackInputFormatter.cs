@@ -18,7 +18,7 @@ namespace FakeRpc.Core.Mvc.MessagePack
 
         public MessagePackInputFormatter(MessagePackSerializerOptions options = null)
         {
-            _options = options ?? MessagePackSerializerOptions.Standard; ;
+            _options = options ?? ContractlessStandardResolver.Options;
             _options = _options.WithCompression(MessagePackCompression.Lz4Block);
             SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue(_mediaType));
         }

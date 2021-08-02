@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FakeRPC.Core\FakeRpc.Core.csproj" />
     <ProjectReference Include="..\FakeRpc.Web\FakeRpc.Web.csproj" />
   </ItemGroup>

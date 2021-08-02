@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using MessagePack.Resolvers;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -16,7 +17,7 @@ namespace FakeRpc.Core.Mvc.MessagePack
 
         public MessagePackOutputFormatter(MessagePackSerializerOptions options = null)
         {
-            _options = options ?? MessagePackSerializerOptions.Standard;
+            _options = options ?? ContractlessStandardResolver.Options;
             _options = _options.WithCompression(MessagePackCompression.Lz4Block);
             SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue(_mediaType));
         }
