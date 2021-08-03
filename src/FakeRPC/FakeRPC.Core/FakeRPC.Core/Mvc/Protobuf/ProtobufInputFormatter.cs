@@ -1,5 +1,6 @@
 ﻿using FakeRpc.Core.Mvc.Protobuf;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Primitives;
 using ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,13 @@ namespace FakeRpc.Core.Mvc.Protobuf
         private static Lazy<RuntimeTypeModel> _typeModel => new Lazy<RuntimeTypeModel>(CreateTypeModel);
 
         public static RuntimeTypeModel TypeModel => _typeModel.Value;
+
+        private static readonly StringSegment _mediaType = new StringSegment(FakeRpcMediaTypes.Protobuf);
+
+        public ProtobufInputFormatter()
+        {
+            SupportedMediaTypes.Add(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue(_mediaType));
+        }
 
         public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {

@@ -30,5 +30,10 @@ namespace FakeRpc.Core
 
             return type.Name.AsSpan().Slice(1).ToString();
         }
+
+        public static void UseSwagger(IApplicationBuilder app)
+        {
+
+        }
     }
 }

@@ -34,11 +34,14 @@ namespace FakeRpc.Web
         {
             services.AddControllersWithViews();
 
+            services.AddControllers();
+
             var builder = new FakeRpcServerBuilder(services);
             builder
                 .AddFakeRpc()
                 .UseMessagePack()
                 .UseUseProtobuf()
+                .EnableSwagger()
                 .EnableConsulServiceRegistry(new ConsulServiceRegistryOptions
                 {
                     BaseUrl = "http://localhost:8500",
@@ -63,9 +66,16 @@ namespace FakeRpc.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FakeRpc Services v1");
             });
         }
     }

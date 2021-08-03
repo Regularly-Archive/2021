@@ -14,8 +14,10 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -25,6 +27,7 @@ namespace FakeRpc.Core
     public class FakeRpcServerBuilder
     {
         private readonly IServiceCollection _services;
+
         public FakeRpcServerBuilder(IServiceCollection services)
         {
             _services = services;
@@ -106,6 +109,15 @@ namespace FakeRpc.Core
             return this;
         }
 
+        public FakeRpcServerBuilder EnableSwagger(Action<SwaggerGenOptions> setupAction = null)
+        {
+            if (setupAction == null)
+                setupAction = BuildDefaultSwaggerGenAction();
+            _services.AddSwaggerGen(setupAction);
+            _services.AddControllers();
+            return this;
+        }
+
         public void Build()
         {
             var serviceProvider = _services.BuildServiceProvider();
@@ -113,7 +125,7 @@ namespace FakeRpc.Core
             if (serviceRegistry != null)
             {
                 var serviceTypes = FromThis().Where(x => x.GetCustomAttribute<FakeRpcAttribute>() != null);
-                foreach(var serviceType in serviceTypes)
+                foreach (var serviceType in serviceTypes)
                 {
                     serviceRegistry.Register(new ServiceRegistration()
                     {
@@ -132,6 +144,31 @@ namespace FakeRpc.Core
             var feferdAssemblies = entryAssembly.GetReferencedAssemblies().Select(x => Assembly.Load(x));
             var allAssemblies = new List<Assembly> { entryAssembly }.Concat(feferdAssemblies);
             return allAssemblies.SelectMany(x => x.DefinedTypes).ToList();
+        }
+
+        private Action<SwaggerGenOptions> BuildDefaultSwaggerGenAction()
+        {
+            Action<SwaggerGenOptions> setupAction = options =>
+            {
+                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
+                {
+                    Title = "FakeRpc Services",
+                    Version = "v1",
+                    Contact = new Microsoft.OpenApi.Models.OpenApiContact()
+                    {
+                        Name = "飞鸿踏雪",
+                        Email = "qinyuanpei@163.com",
+                        Url = new Uri("https://blog.yuanpei.me"),
+                    }
+                });
+
+                options.DocInclusionPredicate((a, b) => true);
+                var assemblyName = Assembly.GetEntryAssembly().GetName().Name;
+                var commentFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{assemblyName}.xml");
+                options.IncludeXmlComments(commentFile);
+            };
+
+            return setupAction;
         }
     }
 }
