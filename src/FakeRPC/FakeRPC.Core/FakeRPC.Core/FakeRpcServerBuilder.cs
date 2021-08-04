@@ -115,7 +115,7 @@ namespace FakeRpc.Core
             return this;
         }
 
-        public FakeRpcServerBuilder AddExternalAssemby(Assembly assembly)
+        public FakeRpcServerBuilder AddExternalAssembly(Assembly assembly)
         {
             if (!_externalAssemblys.Contains(assembly))
                 _externalAssemblys.Add(assembly);

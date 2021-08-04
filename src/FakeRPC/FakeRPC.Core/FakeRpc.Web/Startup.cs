@@ -43,7 +43,7 @@ namespace FakeRpc.Web
                 .UseMessagePack()
                 .UseUseProtobuf()
                 .EnableSwagger()
-                .AddExternalAssemby(typeof(GreetService).Assembly)
+                .AddExternalAssembly(typeof(GreetService).Assembly)
                 .EnableConsulServiceRegistry(options => options.BaseUrl = "http://localhost:8500");
             builder.Build();
         }
