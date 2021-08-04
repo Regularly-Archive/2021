@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Core;
 
 namespace WeatherService
 {
@@ -19,6 +21,19 @@ namespace WeatherService
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            var levelSwitch = new LoggingLevelSwitch();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.ControlledBy(levelSwitch)
+                .WriteTo.Seq
+                (
+                 serverUrl:"http://192.168.50.162:5341",
+                 apiKey: "QI95hji2SokHW3npPFKx",
+                 controlLevelSwitch: levelSwitch
+                )
+                .CreateLogger();
+
+            Log.Logger.Information("App is starting...");
         }
 
         public IConfiguration Configuration { get; }

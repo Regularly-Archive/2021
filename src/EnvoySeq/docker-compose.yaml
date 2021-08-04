@@ -7,6 +7,11 @@ services:
       - "9091:9091"
     volumes:
       - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.50.162:12201"
+        tag: "envoygateway"
   weatherservice1:
     build: WeatherService/
     ports:
@@ -14,6 +19,11 @@ services:
     environment:
       ASPNETCORE_URLS: "http://+"
       ASPNETCORE_ENVIRONMENT: "Development"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.50.162:12201"
+        tag: "weatherservice1"  
   weatherservice2:
     build: WeatherService/
     ports:
@@ -21,13 +31,26 @@ services:
     environment:
       ASPNETCORE_URLS: "http://+"
       ASPNETCORE_ENVIRONMENT: "Development"  
-  seq_server:
-    image: datalust/seq
-    restart: always
-    container_name: seq_server
-    hostname: seq_server
-    environment:
-      - ACCEPT_EULA=Y
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://192.168.50.162:12201"
+        tag: "weatherservice2"  
+  seq-input-gelf:
+    image: datalust/seq-input-gelf:latest
+    depends_on:
+      - seq
     ports:
-      - 8900:80
-      - 5341:5341
+      - "12201:12201/udp"
+    environment:
+      SEQ_ADDRESS: "http://seq:5341"
+      restart: unless-stopped
+  seq:
+    image: datalust/seq:latest
+    ports:
+      - "5341:80"
+    environment:
+      ACCEPT_EULA: "Y"
+      restart: unless-stopped
+    volumes:
+        - ./SeqData:/data

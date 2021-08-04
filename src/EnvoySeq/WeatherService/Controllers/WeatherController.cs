@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace WeatherService.Controllers
 {
@@ -26,6 +27,7 @@ namespace WeatherService.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            Log.Logger.Information("Get WeatherForecasts");
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
