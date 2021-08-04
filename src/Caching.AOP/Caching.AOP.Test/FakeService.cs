@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Caching.AOP.Test
@@ -18,19 +19,17 @@ namespace Caching.AOP.Test
             Console.WriteLine("Method AnyVoid is invoked!");
         }
 
-        [Cacheable(CacheKeyPrefix = "Fake")]
         public List<string> GetColors()
         {
+            Thread.Sleep(500);
             return new List<string> { "Red", "Yellow", "Green" };
         }
 
-        [Cacheable(CacheKeyPrefix = "Fake")]
         public Student GetStudentById(int id)
         {
             return new Student { Id = id, Name = "飞鸿踏雪" };
         }
 
-        [Cacheable(CacheKeyPrefix = "Fake")]
         public Task<bool> IsGradePassed(int id)
         {
             return Task.FromResult(id % 2 == 0);

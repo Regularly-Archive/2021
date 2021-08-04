@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Caching.AOP.Test
 {
-    interface IFakeService
+    public interface IFakeService
     {
         [Cacheable(CacheKeyPrefix = "Fake", Expiration = 180)]
         List<string> GetColors();

@@ -1,4 +1,5 @@
 ﻿using Caching.AOP.Core.Serialization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,13 @@ using System.Threading.Tasks;
 
 namespace Caching.AOP.Core
 {
-    public class CacheInterceptor : DispatchProxy
+    public class CacheInterceptor<TCacheService> : DispatchProxy
     {
-        public object RealObject { get; set; }
+        private TCacheService _realObject => ServiceProvider.GetRequiredService<TCacheService>();
+        private ICacheSerializer _cacheSerializer => ServiceProvider.GetRequiredService<ICacheSerializer>();
+        private IDistributedCache _distributedCache => ServiceProvider.GetRequiredService<IDistributedCache>();
 
-        public ICacheSerializer CacheSerializer;
-
-        public IDistributedCache DistributedCache;
-
+        public IServiceProvider ServiceProvider { get; set; }
 
         public CacheInterceptor()
         {
@@ -30,7 +30,7 @@ namespace Caching.AOP.Core
 
             // void && Task
             if (returnType == typeof(void) || returnType == typeof(Task))
-                return targetMethod.Invoke(RealObject, args);
+                return targetMethod.Invoke(_realObject, args);
 
             if (IsAsyncReturnValue(targetMethod))
                 returnType = targetMethod.ReturnType.GetGenericArguments()[0];
@@ -39,29 +39,29 @@ namespace Caching.AOP.Core
             if (cacheableAttribute != null)
             {
                 var cacheKey = GetCacheKey(cacheableAttribute, targetMethod);
-                cacheValue = DistributedCache.Get(cacheKey);
+                cacheValue = _distributedCache.Get(cacheKey);
                 if (cacheValue != null)
                 {
                     // Task<T>
                     if (IsAsyncReturnValue(targetMethod))
-                        return Task.FromResult(CacheSerializer.Deserialize(cacheValue, returnType));
+                        return Task.FromResult(_cacheSerializer.Deserialize(cacheValue, returnType));
 
-                    return CacheSerializer.Deserialize(cacheValue, returnType);
+                    return _cacheSerializer.Deserialize(cacheValue, returnType);
                 }
 
-                dynamic returnValue = targetMethod.Invoke(RealObject, args);
-                cacheValue = CacheSerializer.Serialize(returnValue);
+                dynamic returnValue = targetMethod.Invoke(_realObject, args);
+                cacheValue = _cacheSerializer.Serialize(returnValue);
 
                 // Task<T>
                 if (IsAsyncReturnValue(targetMethod))
-                    cacheValue = CacheSerializer.Serialize(returnValue.Result);
+                    cacheValue = _cacheSerializer.Serialize(returnValue.Result);
 
                 var cacheOptions = new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(cacheableAttribute.Expiration) };
-                DistributedCache.Set(cacheKey, cacheValue, cacheOptions);
+                _distributedCache.Set(cacheKey, cacheValue, cacheOptions);
                 return returnValue;
             }
 
-            return targetMethod.Invoke(RealObject, args);
+            return targetMethod.Invoke(_realObject, args);
         }
 
         private string GetCacheKey(CacheableAttribute cacheableAttribute, MethodInfo methodInfo)

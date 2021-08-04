@@ -5,8 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -26,17 +28,55 @@ namespace Caching.AOP.Test
                 options.InstanceName = "Caching.AOP.Test";
             });
 
-            var fakeServiceProxy = DispatchProxy.Create<IFakeService, CacheInterceptor>();
-            (fakeServiceProxy as CacheInterceptor).RealObject = services.BuildServiceProvider().GetService<IFakeService>();
-            (fakeServiceProxy as CacheInterceptor).CacheSerializer = services.BuildServiceProvider().GetService<ICacheSerializer>();
-            (fakeServiceProxy as CacheInterceptor).DistributedCache = services.BuildServiceProvider().GetService<IDistributedCache>();
+            var serviceProvider = services.BuildServiceProvider();
+            var fakeServiceProxy = DispatchProxy.Create<IFakeService, CacheInterceptor<IFakeService>>();
+            (fakeServiceProxy as CacheInterceptor<IFakeService>).ServiceProvider = serviceProvider;
+
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
 
             for (var i = 0; i < 3; i++)
             {
+                stopWatch.Restart();
                 var colors = fakeServiceProxy.GetColors();
+                stopWatch.Stop();
+                Trace.WriteLine($"Invoke GetColors used {stopWatch.Elapsed.TotalMilliseconds} ms");
                 var student = fakeServiceProxy.GetStudentById(1);
                 var isPassed = fakeServiceProxy.IsGradePassed(1);
             }
+        }
+
+        [Fact]
+        public List<Student> Test_Manual()
+        {
+            var services = new ServiceCollection();
+            services.AddTransient<IRepository<Student>, FakeRepository>();
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "localhost:6379";
+                options.InstanceName = "Caching.AOP.Test";
+            });
+
+            var serviceProvider = services.BuildServiceProvider();
+            var distributedCache = serviceProvider.GetService<IDistributedCache>();
+            var repository = serviceProvider.GetService<IRepository<Student>>();
+            var cacheKey = "GetAllStudents";
+            var students = new List<Student>();
+            var cacheValue = distributedCache.GetString(cacheKey);
+            if (string.IsNullOrEmpty(cacheValue))
+            {
+                students = repository.GetAll().ToList();
+                var json = JsonConvert.SerializeObject(students);
+                var bytes = Encoding.UTF8.GetBytes(json);
+                distributedCache.Set(cacheKey, bytes);
+            } 
+            else
+            {
+                students = JsonConvert.DeserializeObject<List<Student>>(cacheValue);
+            }
+
+            Assert.True(students.Any());
+            return students;
         }
 
         [Fact]
@@ -144,5 +184,24 @@ namespace Caching.AOP.Test
         public int Id { get; set; }
         public string Address { get; set; }
         public string Telephone { get; set; }
+    }
+
+    public class FakeRepository : IRepository<Student>
+    {
+        IEnumerable<Student> IRepository<Student>.GetAll()
+        {
+            return new List<Student>()
+            {
+                new Student() { Id = 1, Name = "ÕÅÒÇ" },
+                new Student() { Id = 2, Name = "ËÕÇØ" },
+                new Student() { Id = 3, Name = "Ëïë÷" },
+                new Student() { Id = 4, Name = "º«·Ç" },
+            };
+        }
+    }
+
+    public interface IRepository<T>
+    {
+        IEnumerable<T> GetAll();
     }
 }
