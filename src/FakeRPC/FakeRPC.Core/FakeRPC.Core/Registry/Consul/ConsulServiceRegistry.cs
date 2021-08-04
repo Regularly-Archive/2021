@@ -1,4 +1,5 @@
 ﻿using Consul;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,12 @@ namespace FakeRpc.Core.Registry.Consul
     {
         private readonly IConsulClient _consulClient;
         private readonly ConsulServiceRegistryOptions _options;
-        public ConsulServiceRegistry(ConsulServiceRegistryOptions options)
+        private readonly ILogger<ConsulServiceRegistry> _logger;
+        public ConsulServiceRegistry(ConsulServiceRegistryOptions options, ILogger<ConsulServiceRegistry> logger)
         {
             _options = options;
             _consulClient = new ConsulClient(new ConsulClientConfiguration() { Address = new Uri(options.BaseUrl) });
+            _logger = logger;
         }
 
         public override void Register(ServiceRegistration serviceRegistration)
@@ -40,6 +43,8 @@ namespace FakeRpc.Core.Registry.Consul
                 },
                 Tags = new string[] { "FakeRpc", serviceRegistration.ServiceGroup }
             }));
+
+            _logger.LogInformation($"Register {serviceRegistration.ServiceGroup}.{serviceRegistration.ServiceName} {serviceRegistration.ServiceUri} ...");
         }
 
         public override void Unregister(ServiceRegistration serviceRegistration)

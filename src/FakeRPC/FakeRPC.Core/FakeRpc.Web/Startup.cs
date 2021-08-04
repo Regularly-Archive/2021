@@ -17,6 +17,7 @@ using FakeRpc.Core.Registry;
 using CSRedis;
 using FakeRpc.Core.Registry.Redis;
 using FakeRpc.Core.Registry.Consul;
+using FakeRPC.XYZ.Services;
 
 namespace FakeRpc.Web
 {

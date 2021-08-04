@@ -27,6 +27,7 @@ namespace FakeRpc.Core
     public class FakeRpcServerBuilder
     {
         private readonly IServiceCollection _services;
+        private List<Assembly> _externalAssemblys = new List<Assembly>();
 
         public FakeRpcServerBuilder(IServiceCollection services)
         {
@@ -114,8 +115,25 @@ namespace FakeRpc.Core
             return this;
         }
 
+        public FakeRpcServerBuilder AddServicesAssemby(Assembly assembly)
+        {
+            if (!_externalAssemblys.Contains(assembly))
+                _externalAssemblys.Add(assembly);
+
+            return this;
+        }
+
         public void Build()
         {
+            // 加载程序集
+            var mvcBuilder = _services.AddMvc();
+            mvcBuilder.ConfigureApplicationPartManager(apm =>
+            {
+                foreach (var assembly in _externalAssemblys)
+                    apm.ApplicationParts.Add(new AssemblyPart(assembly));
+            });
+
+            // 注册服务
             var serviceProvider = _services.BuildServiceProvider();
             var serviceRegistry = serviceProvider.GetService<IServiceRegistry>();
             if (serviceRegistry != null)
@@ -139,7 +157,8 @@ namespace FakeRpc.Core
             var entryAssembly = Assembly.GetEntryAssembly();
             var feferdAssemblies = entryAssembly.GetReferencedAssemblies().Select(x => Assembly.Load(x));
             var allAssemblies = new List<Assembly> { entryAssembly }.Concat(feferdAssemblies);
-            return allAssemblies.SelectMany(x => x.DefinedTypes).ToList();
+            allAssemblies = allAssemblies.Concat(_externalAssemblys).Distinct();
+            return allAssemblies.SelectMany(x => x.DefinedTypes).Distinct().ToList();
         }
 
         private Action<SwaggerGenOptions> BuildDefaultSwaggerGenAction()

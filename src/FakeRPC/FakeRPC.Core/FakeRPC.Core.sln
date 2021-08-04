@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31402.337
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeRpc.Core", "FakeRPC.Core\FakeRpc.Core.csproj", "{BC05A2A6-BC36-4F20-A46F-E7EBC9B0AB10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FakeRpc.Core", "FakeRPC.Core\FakeRpc.Core.csproj", "{BC05A2A6-BC36-4F20-A46F-E7EBC9B0AB10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeRpc.Web", "FakeRpc.Web\FakeRpc.Web.csproj", "{DD593CE6-BC17-4CB3-82EE-179453508D51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FakeRpc.Web", "FakeRpc.Web\FakeRpc.Web.csproj", "{DD593CE6-BC17-4CB3-82EE-179453508D51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeRpc.Client", "FakeRpc.Client\FakeRpc.Client.csproj", "{4781BFD1-0A5B-47CF-9AE3-FF63B47F496A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FakeRpc.Client", "FakeRpc.Client\FakeRpc.Client.csproj", "{4781BFD1-0A5B-47CF-9AE3-FF63B47F496A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

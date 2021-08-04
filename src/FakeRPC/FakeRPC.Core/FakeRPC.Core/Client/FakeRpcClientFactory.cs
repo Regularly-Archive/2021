@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -57,7 +59,5 @@ namespace FakeRpc.Core.Client
             var baseUri = new Uri(baseUrl);
             return Create<TClient>(baseUri, rpcCallsFactory);
         }
-
-
     }
 }
