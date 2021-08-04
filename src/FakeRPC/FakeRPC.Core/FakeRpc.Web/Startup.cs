@@ -42,10 +42,7 @@ namespace FakeRpc.Web
                 .UseMessagePack()
                 .UseUseProtobuf()
                 .EnableSwagger()
-                .EnableConsulServiceRegistry(new ConsulServiceRegistryOptions
-                {
-                    BaseUrl = "http://localhost:8500",
-                });
+                .EnableConsulServiceRegistry(options => options.BaseUrl = "http://localhost:8500");
             builder.Build();
         }
 

@@ -1,4 +1,5 @@
 ﻿using Consul;
+using CSRedis;
 using FakeRpc.Core.Registry;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,10 @@ namespace FakeRpc.Core.Discovery.Consul
     {
         private readonly IConsulClient _consulClient;
         private readonly ConsulServiceDiscoveryOptions _options;
-        public ConsulServiceDiscovery(IConsulClient consulClient, ConsulServiceDiscoveryOptions options)
+        public ConsulServiceDiscovery(ConsulServiceDiscoveryOptions options)
         {
-            _consulClient = consulClient;
             _options = options;
+            _consulClient = new ConsulClient(new ConsulClientConfiguration() { Address = new Uri(_options.BaseUrl) });
         }
 
         public override IEnumerable<Uri> GetService(string serviceName, string serviceGroup)

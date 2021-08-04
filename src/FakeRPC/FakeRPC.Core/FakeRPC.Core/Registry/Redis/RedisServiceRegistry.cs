@@ -14,12 +14,13 @@ namespace FakeRpc.Core.Registry.Redis
     {
         private readonly CSRedisClient _redisClient;
         private readonly ILogger<RedisServiceRegistry> _logger;
-        private readonly string _registerEventTopic = "evt_service_register";
-        private readonly string _unregisterEventTopic = "evt_service_unregister";
+        private readonly RedisServiceRegistryOptions _options;
 
-        public RedisServiceRegistry(CSRedisClient redisClient, ILogger<RedisServiceRegistry> logger)
+        public RedisServiceRegistry(RedisServiceRegistryOptions options,ILogger<RedisServiceRegistry> logger)
         {
-            _redisClient = redisClient;
+            _options = options;
+            _redisClient = new CSRedisClient(options.RedisUrl);
+            RedisHelper.Initialization(_redisClient);
             _logger = logger;
         }
 
@@ -33,7 +34,7 @@ namespace FakeRpc.Core.Registry.Redis
             if (!serviceNodes.Any(x => x.ServiceUri == serviceRegistration.ServiceUri && x.ServiceGroup == serviceRegistration.ServiceGroup))
             {
                 _redisClient.SAdd(registryKey, serviceRegistration);
-                Publish(_registerEventTopic, new { Key = registryKey, Value = serviceRegistration });
+                Publish(_options.RegisterEventTopic, new { Key = registryKey, Value = serviceRegistration });
             }
 
         }
@@ -49,7 +50,7 @@ namespace FakeRpc.Core.Registry.Redis
             if (serviceNode != null)
             {
                 _redisClient.SRem(registryKey, serviceRegistration);
-                Publish(_unregisterEventTopic, new { Key = registryKey, Value = serviceNode });
+                Publish(_options.UnregisterEventTopic, new { Key = registryKey, Value = serviceNode });
             }
         }
 

@@ -8,10 +8,12 @@ namespace FakeRpc.Core.Registry.Consul
 {
     public class ConsulServiceRegistry : BaseServiceRegistry
     {
-        private IConsulClient _consulClient;
-        public ConsulServiceRegistry(IConsulClient consulClient)
+        private readonly IConsulClient _consulClient;
+        private readonly ConsulServiceRegistryOptions _options;
+        public ConsulServiceRegistry(ConsulServiceRegistryOptions options)
         {
-            _consulClient = consulClient;
+            _options = options;
+            _consulClient = new ConsulClient(new ConsulClientConfiguration() { Address = new Uri(options.BaseUrl) });
         }
 
         public override void Register(ServiceRegistration serviceRegistration)
@@ -37,7 +39,7 @@ namespace FakeRpc.Core.Registry.Consul
                     Timeout = TimeSpan.FromSeconds(5)
                 },
                 Tags = new string[] { "FakeRpc", serviceRegistration.ServiceGroup }
-            })) ;
+            }));
         }
 
         public override void Unregister(ServiceRegistration serviceRegistration)

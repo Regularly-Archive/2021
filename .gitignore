@@ -348,3 +348,22 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+src/EnvoySeq/seq-data/Seq.json
+src/EnvoySeq/SeqData/Seq.json
+src/EnvoySeq/seq-data/Documents/documents.lmdb
+src/EnvoySeq/seq-data/Documents/documents.lmdb-lock
+src/EnvoySeq/SeqData/Documents/documents.lmdb
+src/EnvoySeq/SeqData/Documents/documents.lmdb-lock
+src/EnvoySeq/seq-data/Stream/stream.1.metadata
+src/EnvoySeq/seq-data/Stream/stream.flare
+src/EnvoySeq/SeqData/Stream/stream.08d9558cec6d3c00.5941fb72c8e44d98b0073559378e02f9.tick
+src/EnvoySeq/SeqData/Stream/stream.08d9559335c08a00.842c7e76258247c09e70633265d33604.tick
+src/EnvoySeq/SeqData/Stream/stream.08d95593e890e800.1d9db7f0f407428eb99ca277d927f8a7.tick
+src/EnvoySeq/SeqData/Stream/stream.08d955954e31a400.31186c316a9b4334ac1015f4bee5041b.tick
+src/EnvoySeq/SeqData/Stream/stream.08d9559601020200.acf5ac3d82ed4779935cf9b0ae91001a.tick
+src/EnvoySeq/SeqData/Stream/stream.08d95596b3d26000.fff908897fb04c2cb7681597cc58ed84.tick
+src/EnvoySeq/SeqData/Stream/stream.08d9559766a2be00.e35535f6d97e44fc95c26d5b3bb2a36b.tick
+src/EnvoySeq/SeqData/Stream/stream.08d9559819731c00.9896ef0b228c498e960c690a3df85162.tick
+src/EnvoySeq/SeqData/Stream/stream.08d95598cc437a00.94281d37129142198c1f3e9bd29e0923.tick
+src/EnvoySeq/SeqData/Stream/stream.08d955997f13d800.af66d85428ea413daa92ce231eb43a2d.tick
+src/EnvoySeq/SeqData/

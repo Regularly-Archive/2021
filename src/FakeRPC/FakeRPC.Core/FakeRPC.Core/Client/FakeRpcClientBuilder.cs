@@ -2,6 +2,7 @@
 using FakeRpc.Core.Client;
 using FakeRpc.Core.Discovery;
 using FakeRpc.Core.Discovery.Consul;
+using FakeRpc.Core.Discovery.Redis;
 using FakeRpc.Core.LoadBalance;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -27,29 +28,6 @@ namespace FakeRpc.Core.Client
             return this;
         }
 
-        //public static void AddRpcClient<TClient>(this IServiceCollection services, ServiceDiscoveryOptions serviceDiscoveryOptions, Action<HttpClient> configureClient = null)
-        //{
-        //    services.AddSingleton<FakeRpcClientFactory>();
-        //    services.AddSingleton<IServiceDiscovery, RedisServiceDiscovery>();
-        //    services.AddSingleton<CSRedisClient>(sp =>
-        //    {
-        //        var client = new CSRedisClient(serviceDiscoveryOptions.DiscoveryServer);
-        //        RedisHelper.Initialization(client);
-        //        return client;
-        //    });
-
-        //    var serviceProvider = services.BuildServiceProvider();
-        //    var serviceDiscovery = serviceProvider.GetService<IServiceDiscovery>();
-        //    var serviceUri = serviceDiscovery.GetService<TClient>(serviceDiscoveryOptions.ServiceNamespace);
-
-        //    services.AddFakeRpcClient<TClient>(client =>
-        //    {
-        //        client.BaseAddress = serviceUri;
-        //        client.DefaultRequestVersion = new Version(2, 0);
-        //        configureClient?.Invoke(client);
-        //    });
-        //}
-
         public FakeRpcClientBuilder AddRpcCallsFactory(Func<HttpClient, IFakeRpcCalls> factory = null)
         {
             if (factory == null)
@@ -59,7 +37,7 @@ namespace FakeRpc.Core.Client
             return this;
         }
 
-        public FakeRpcClientBuilder EnableConsulServiceDiscovery<TServiceDiscovery>(Func<IServiceProvider, TServiceDiscovery> serviceDiscoveryFactory = null) where TServiceDiscovery : class, IServiceDiscovery
+        public FakeRpcClientBuilder EnableServiceDiscovery<TServiceDiscovery>(Func<IServiceProvider, TServiceDiscovery> serviceDiscoveryFactory = null) where TServiceDiscovery : class, IServiceDiscovery
         {
             if (serviceDiscoveryFactory != null)
                 _services.AddSingleton<TServiceDiscovery>(serviceDiscoveryFactory);
@@ -69,15 +47,23 @@ namespace FakeRpc.Core.Client
             return this;
         }
 
-        public FakeRpcClientBuilder EnableConsulServiceDiscovery(ConsulServiceDiscoveryOptions options)
+        public FakeRpcClientBuilder EnableConsulServiceDiscovery(Action<ConsulServiceDiscoveryOptions> setupAction)
         {
-            _services.AddSingleton(options);
-            _services.AddSingleton<IConsulClient, ConsulClient>(_ => new ConsulClient(consulConfig =>
-            {
-                consulConfig.Address = new Uri(options.BaseUrl);
-            }));
+            var options = new ConsulServiceDiscoveryOptions();
+            setupAction?.Invoke(options);
 
+            _services.AddSingleton(options);
             _services.AddSingleton<IServiceDiscovery, ConsulServiceDiscovery>();
+            return this;
+        }
+
+        public FakeRpcClientBuilder EnableRedisServiceDiscovery(Action<RedisServiceDiscoveryOptions> setupAction)
+        {
+            var options = new RedisServiceDiscoveryOptions();
+            setupAction?.Invoke(options);
+
+            _services.AddSingleton(options);
+            _services.AddSingleton<IServiceDiscovery, RedisServiceDiscovery>();
             return this;
         }
 

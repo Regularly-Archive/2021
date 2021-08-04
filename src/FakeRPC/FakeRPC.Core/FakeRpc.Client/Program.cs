@@ -26,10 +26,8 @@ namespace FakeRpc.Client
     }
 
     [MemoryDiagnoser]
-    [SimpleJob(RuntimeMoniker.Net472, baseline: true)]
     [SimpleJob(RuntimeMoniker.NetCoreApp31)]
     [SimpleJob(RuntimeMoniker.Net50)]
-    [SimpleJob(RuntimeMoniker.CoreRt30)]
     [RPlotExporter]
     public class TestContext
     {
@@ -53,16 +51,17 @@ namespace FakeRpc.Client
 
             builder.AddRpcCallsFactory(MessagePackRpcCalls.Factory);
             builder.EnableLoadBalance<RandomLoadBalanceStrategy>();
-            builder.EnableConsulServiceDiscovery(new ConsulServiceDiscoveryOptions()
+            builder.EnableConsulServiceDiscovery(options =>
             {
-                BaseUrl = "http://localhost:8500",
-                UseHttps = true
+                options.BaseUrl = "http://localhost:8500";
+                options.UseHttps = true;
             });
+
 
             return services.BuildServiceProvider();
         }
 
-        [Benchmark]
+        [Benchmark(Baseline = false, Description = "Test FakeRpc with MessagePack", OperationsPerInvoke = 1)]
         public async Task RunMessagePack()
         {
             var serviceProvider = InitIoc();
@@ -74,7 +73,7 @@ namespace FakeRpc.Client
             var result = calculatorProxy.Random();
         }
 
-        [Benchmark]
+        [Benchmark(Baseline = false, Description = "Test FakeRpc with Protobuff", OperationsPerInvoke = 1)]
         public async Task RunProtobuf()
         {
             var serviceProvider = InitIoc();
@@ -86,7 +85,7 @@ namespace FakeRpc.Client
             var result = calculatorProxy.Random();
         }
 
-        [Benchmark]
+        [Benchmark(Baseline = false, Description = "Test FakeRpc with JSON", OperationsPerInvoke = 1)]
         public async Task RunJson()
         {
             var serviceProvider = InitIoc();

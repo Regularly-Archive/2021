@@ -85,26 +85,22 @@ namespace FakeRpc.Core
             return this;
         }
 
-        public FakeRpcServerBuilder EnableRedisServiceRegistry(RedisServiceRegistryOptions options)
+        public FakeRpcServerBuilder EnableRedisServiceRegistry(Action<RedisServiceRegistryOptions> setupAction)
         {
-            _services.AddSingleton<CSRedisClient>(_ =>
-            {
-                var client = new CSRedisClient(options.RedisUrl);
-                RedisHelper.Initialization(client);
-                return client;
-            });
+            var options = new RedisServiceRegistryOptions();
+            setupAction?.Invoke(options);
 
+            _services.AddSingleton(options);
             _services.AddSingleton<IServiceRegistry, RedisServiceRegistry>();
             return this;
         }
 
-        public FakeRpcServerBuilder EnableConsulServiceRegistry(ConsulServiceRegistryOptions options)
+        public FakeRpcServerBuilder EnableConsulServiceRegistry(Action<ConsulServiceRegistryOptions> setupAction)
         {
-            _services.AddSingleton<IConsulClient, ConsulClient>(_ => new ConsulClient(consulConfig =>
-            {
-                consulConfig.Address = new Uri(options.BaseUrl);
-            }));
+            var options = new ConsulServiceRegistryOptions();
+            setupAction?.Invoke(options);
 
+            _services.AddSingleton(options);
             _services.AddSingleton<IServiceRegistry, ConsulServiceRegistry>();
             return this;
         }
