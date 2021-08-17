@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  nginx_8087:
+    image: nginx:latest
+    container_name: nginx_8087
+    ports:
+      - 8087:80
+    networks:
+      - default
+  nginx_8088:
+    image: nginx:latest
+    container_name: nginx_8088
+    ports:
+      - 8088:80
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge

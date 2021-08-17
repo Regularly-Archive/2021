@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  redis_server:
+    image: redis:latest
+    networks:
+      - backend
+  city_service:
+    build: CityService/
+    container_name: city_service
+    ports:
+      - "8081:80"
+    networks:
+      - backend
+    depends_on:
+      - redis_server
+networks:
+  backend:

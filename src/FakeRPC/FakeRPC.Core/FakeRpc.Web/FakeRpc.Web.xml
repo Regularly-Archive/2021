@@ -1,61 +1,61 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>FakeRpc.Web</name>
+        <name>ServerExample</name>
     </assembly>
     <members>
-        <member name="T:FakeRpc.Web.Services.GreetService">
+        <member name="T:ServerExample.Services.GreetService">
             <summary>
             GreetService
             </summary>
         </member>
-        <member name="M:FakeRpc.Web.Services.GreetService.SayHello(FakeRpc.Web.Services.HelloRequest)">
+        <member name="M:ServerExample.Services.GreetService.SayHello(ServerExample.Services.HelloRequest)">
             <summary>
             SayHello
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:FakeRpc.Web.Services.GreetService.SayWho">
+        <member name="M:ServerExample.Services.GreetService.SayWho">
             <summary>
             SayWho
             </summary>
             <returns></returns>
         </member>
-        <member name="T:FakeRpc.Web.Services.IGreetService">
+        <member name="T:ServerExample.Services.IGreetService">
             <summary>
             IGreetService
             </summary>
         </member>
-        <member name="M:FakeRpc.Web.Services.IGreetService.SayHello(FakeRpc.Web.Services.HelloRequest)">
+        <member name="M:ServerExample.Services.IGreetService.SayHello(ServerExample.Services.HelloRequest)">
             <summary>
             SayHello
             </summary>
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:FakeRpc.Web.Services.IGreetService.SayWho">
+        <member name="M:ServerExample.Services.IGreetService.SayWho">
             <summary>
             SayWho
             </summary>
             <returns></returns>
         </member>
-        <member name="T:FakeRpc.Web.Services.HelloReply">
+        <member name="T:ServerExample.Services.HelloReply">
             <summary>
             HelloReply
             </summary>
         </member>
-        <member name="P:FakeRpc.Web.Services.HelloReply.Message">
+        <member name="P:ServerExample.Services.HelloReply.Message">
             <summary>
             Message
             </summary>
         </member>
-        <member name="T:FakeRpc.Web.Services.HelloRequest">
+        <member name="T:ServerExample.Services.HelloRequest">
             <summary>
             HelloRequest
             </summary>
         </member>
-        <member name="P:FakeRpc.Web.Services.HelloRequest.Name">
+        <member name="P:ServerExample.Services.HelloRequest.Name">
             <summary>
             Name
             </summary>

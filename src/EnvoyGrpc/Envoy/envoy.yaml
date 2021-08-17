@@ -50,7 +50,7 @@ static_resources:
       tcp_keepalive:
         keepalive_time: 300
     load_assignment:
-      cluster_name: weatherservice
+      cluster_name: grpcservice
       endpoints:
       - lb_endpoints:
         - endpoint:

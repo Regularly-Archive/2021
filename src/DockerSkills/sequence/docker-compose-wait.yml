@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  redis_server:
+    image: redis:latest
+    networks:
+      - backend
+  city_service:
+    # build: CityService/
+    # container_name: city_service
+    image: ubuntu:14.04
+    ports:
+      - "8081:80"
+    networks:
+      - backend
+    depends_on:
+      - redis_server
+    command: >
+      /bin/bash -c '
+      while ! nc -z redis_server 6379;
+      do
+        echo "wait for redis_server";
+        sleep 1;
+      done;
+
+      echo "redis_server is ready!";
+      echo "start city_service here";
+      '
+networks:
+  backend:
