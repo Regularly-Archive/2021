@@ -27,9 +27,10 @@ WORKDIR /app
 RUN apt-get update && apt-get -y install netcat
 # RUN update-alternatives --config nc 
 COPY --from=publish /app/publish .
-# COPY --from=wait-for-it /usr/bin/wait-for-it .
+# COPY --from=wait-for-it /usr/bin/wait-for-it 
 HEALTHCHECK --interval=5s --timeout=3s \
   CMD curl -fs http://localhost:80/ || exit 1
-ENTRYPOINT ["bash", "entrypoint.sh","-d", "redis_server:6379", "-c", "dotnet CityService.dll"]
+ENTRYPOINT ["bash", "./wait-for-it.sh", "-h", "127.0.0.1", "-p", "6379", "--", "dotnet CityService.dll"]
+# ENTRYPOINT ["bash", "entrypoint.sh","-d", "redis_server:6379", "-c", "dotnet CityService.dll"]
 
 
