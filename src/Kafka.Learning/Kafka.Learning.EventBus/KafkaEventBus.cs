@@ -141,7 +141,7 @@ namespace Kafka.Learning.EventBus
             {
                 await adminClient.CreateTopicsAsync(new List<TopicSpecification>
                 {
-                    new TopicSpecification() { Name = topicName, NumPartitions = 1, ReplicationFactor = 1 }
+                    new TopicSpecification() { Name = topicName, NumPartitions = 5, ReplicationFactor = 1 }
                 });
             }
 

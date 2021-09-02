@@ -32,17 +32,20 @@ namespace Kafka.Learning.EventBus.Runner.Controller
                 ORDER_ID = "OR002",
             });
 
-            _eventBus.Publish(new WriteLogEvent()
+            for (var i = 0; i < 100; i++)
             {
-                TRANSACTION_ID = Guid.NewGuid().ToString("N"),
-                LOG_LEVEL = "DEBUG",
-                HOST_NAME = "localhost",
-                HOST_IP = "localhost",
-                CONTENT = "起风了，唯有努力生存",
-                USER_ID = "飞鸿踏雪",
-                TTID = "Default",
-                APP_NAMESPACE = "ASP.NET Core"
-            });
+                _eventBus.Publish(new WriteLogEvent()
+                {
+                    TRANSACTION_ID = i.ToString(),
+                    LOG_LEVEL = "DEBUG",
+                    HOST_NAME = "localhost",
+                    HOST_IP = "localhost",
+                    CONTENT = "起风了，唯有努力生存",
+                    USER_ID = "飞鸿踏雪",
+                    TTID = "Default",
+                    APP_NAMESPACE = "ASP.NET Core"
+                }) ;
+            }
         }
     }
 }

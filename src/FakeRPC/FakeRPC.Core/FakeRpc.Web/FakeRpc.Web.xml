@@ -1,64 +1,8 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>ServerExample</name>
+        <name>FakeRpc.Example.Server</name>
     </assembly>
     <members>
-        <member name="T:ServerExample.Services.GreetService">
-            <summary>
-            GreetService
-            </summary>
-        </member>
-        <member name="M:ServerExample.Services.GreetService.SayHello(ServerExample.Services.HelloRequest)">
-            <summary>
-            SayHello
-            </summary>
-            <param name="request"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ServerExample.Services.GreetService.SayWho">
-            <summary>
-            SayWho
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:ServerExample.Services.IGreetService">
-            <summary>
-            IGreetService
-            </summary>
-        </member>
-        <member name="M:ServerExample.Services.IGreetService.SayHello(ServerExample.Services.HelloRequest)">
-            <summary>
-            SayHello
-            </summary>
-            <param name="request"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ServerExample.Services.IGreetService.SayWho">
-            <summary>
-            SayWho
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:ServerExample.Services.HelloReply">
-            <summary>
-            HelloReply
-            </summary>
-        </member>
-        <member name="P:ServerExample.Services.HelloReply.Message">
-            <summary>
-            Message
-            </summary>
-        </member>
-        <member name="T:ServerExample.Services.HelloRequest">
-            <summary>
-            HelloRequest
-            </summary>
-        </member>
-        <member name="P:ServerExample.Services.HelloRequest.Name">
-            <summary>
-            Name
-            </summary>
-        </member>
     </members>
 </doc>

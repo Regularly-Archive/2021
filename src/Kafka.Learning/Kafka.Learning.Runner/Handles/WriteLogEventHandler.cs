@@ -17,7 +17,7 @@ namespace Kafka.Learning.EventBus
 
         public Task Handle(WriteLogEvent @event)
         {
-            _logger.LogInformation($"日志编号：{@event.TRANSACTION_ID}，日志级别：{@event.LOG_LEVEL}，主机：{@event.HOST_NAME}，IP：{@event.HOST_IP}，内容：{@event.CONTENT}");
+            _logger.LogInformation($"时间：{@event.CreatedAt}, 日志编号：{@event.TRANSACTION_ID}，日志级别：{@event.LOG_LEVEL}，主机：{@event.HOST_NAME}，IP：{@event.HOST_IP}，内容：{@event.CONTENT}");
             return Task.CompletedTask;
         }
     }

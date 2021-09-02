@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Kafka.Learning.EventBus
         public TimeSpan PollingInterval { get; set; } = TimeSpan.FromSeconds(30);
         public PollingBasedConsumer(ConsumerConfig consumeConfig)
         {
-            _consumer = BuildConsumer<string, byte[]>(consumeConfig, builder => 
+            _consumer = BuildConsumer<string, byte[]>(consumeConfig, builder =>
             {
                 builder.SetKeyDeserializer(Deserializers.Utf8);
                 builder.SetValueDeserializer(Deserializers.ByteArray);
@@ -25,11 +26,15 @@ namespace Kafka.Learning.EventBus
             });
             _pollingTimer = new System.Timers.Timer();
             _pollingTimer.Interval = PollingInterval.TotalMilliseconds;
-            _pollingTimer.Elapsed += (s, e) =>
+            _pollingTimer.Elapsed += async (s, e) =>
             {
-                var consumeResult = _consumer.Consume(_cancellationTokenSource.Token);
-                if (consumeResult != null)
-                    OnConsume?.Invoke(consumeResult);
+                var consumeTasks = Enumerable.Range(0, 5).Select(x => Task.Run(() => _consumer.Consume(_cancellationTokenSource.Token))).ToList();
+                var consumeResults = await Task.WhenAll(consumeTasks);
+                consumeResults.ToList().ForEach(consumeResult =>
+                {
+                    if (consumeResult != null)
+                        OnConsume?.Invoke(consumeResult);
+                });
             };
         }
 
