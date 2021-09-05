@@ -1,0 +1,14 @@
+openssl genrsa -out server.key 2048
+openssl req -new -key ca.key -out server.csr
+openssl ca -in server.csr -out server.crt -cert ca.crt -keyfile ca.key
+
+D:\Program Files\Git\mingw32\ssl\openssl.cnf这个文件很重要
+注意建立demoCA目录
+
+mkdir -p ./demoCA/newcerts
+cd ./demoCA/
+touch index.txt
+echo '01' > serial
+cd ..
+
+https://docs.azure.cn/zh-cn/articles/azure-operations-guide/application-gateway/aog-application-gateway-howto-create-self-signed-cert-via-openssl

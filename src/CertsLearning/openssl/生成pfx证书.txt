@@ -1,0 +1,7 @@
+openssl genrsa -out server.key 4096
+openssl req -new -key server.key -out server.csr
+openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+openssl pkcs12 -export -in server.crt -inkey server.key -out server.pfx
+
+// 一步生成证书
+openssl req -new -x509 -newkey rsa:4096 -keyout server.key -out server.cer

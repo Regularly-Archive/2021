@@ -1,0 +1,5 @@
+openssl genrsa -out ca.key 2048
+openssl rsa -text -in ca.key
+openssl req -new -key ca.key -out ca.csr
+openssl req -text -in ca.csr -noout
+openssl x509 -req -days 365 -in ca.csr -signkey ca.key -out ca.crt
