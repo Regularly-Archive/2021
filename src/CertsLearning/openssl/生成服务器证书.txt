@@ -1,5 +1,5 @@
 openssl genrsa -out server.key 2048
-openssl req -new -key ca.key -out server.csr
+openssl req -new -key ca.key -out server.csr -subj "/C=CN/ST=ShanXi/L=XA/O=TEST/OU=TEST/CN=test.com"
 openssl ca -in server.csr -out server.crt -cert ca.crt -keyfile ca.key
 
 D:\Program Files\Git\mingw32\ssl\openssl.cnf这个文件很重要

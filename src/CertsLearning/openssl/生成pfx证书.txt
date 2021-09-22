@@ -2,6 +2,24 @@ openssl genrsa -out server.key 4096
 openssl req -new -key server.key -out server.csr
 openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 openssl pkcs12 -export -in server.crt -inkey server.key -out server.pfx
+//如果是Window下，可以使用
+
+winpty openssl pkcs12 -export -in server.crt -inkey server.key -out server.pfx
 
 // 一步生成证书
-openssl req -new -x509 -newkey rsa:4096 -keyout server.key -out server.cer
+openssl req -new -x509 -newkey rsa:4096 -keyout server.key -out server.crt
+
+编码格式 PEM 、 DER
+
+CRT - CRT应该是certificate的三个字母,其实还是证书的意思,常见于*NIX系统,有可能是PEM编码,也有可能是DER编码,大多数应该是PEM编码,相信你已经知道怎么辨别.
+
+CER - 还是certificate,还是证书,常见于Windows系统,同样的,可能是PEM编码,也可能是DER编码,大多数应该是DER编码.证书中没有私钥，DER 编码二进制格式的证书文件
+
+KEY - 通常用来存放一个公钥或者私钥,并非X.509证书,编码同样的,可能是PEM,也可能是DER.
+查看KEY的办法:openssl rsa -in mykey.key -text -noout
+如果是DER格式的话,同理应该这样了:openssl rsa -in mykey.key -text -noout -inform der
+
+CSR - Certificate Signing Request,即证书签名请求,这个并不是证书,而是向权威证书颁发机构获得签名证书的申请,其核心内容是一个公钥(当然还附带了一些别的信息),在生成这个申请的时候,同时也会生成一个私钥,私钥要自己保管好.做过iOS APP的朋友都应该知道是怎么向苹果申请开发者证书的吧.
+查看的办法:openssl req -noout -text -in my.csr (如果是DER格式的话照旧加上-inform der,这里不写了)
+
+PFX/P12 - predecessor of PKCS#12,包含公钥和私钥的二进制格式证书
