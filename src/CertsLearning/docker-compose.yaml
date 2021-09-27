@@ -3,15 +3,16 @@ services:
   envoygateway:
     build: Envoy/
     ports:
-      - "9090:9090"
+      - "8080:8080"
       - "9443:9443"
+      - "9091:9091"
     volumes:
       - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml:rw
       - ./Envoy/certs:/etc/envoy/certs:rw
   simpleapp:
     build: SampleApp/
     ports:
-      - "8082:80"
+      - "8082:90"
     environment:
       ASPNETCORE_URLS: "http://+"
       ASPNETCORE_ENVIRONMENT: "Development"

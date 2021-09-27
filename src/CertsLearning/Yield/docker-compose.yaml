@@ -1,0 +1,36 @@
+version: '3'
+services:
+  envoy:
+    image: envoyproxy/envoy-alpine:v1.15-latest
+    environment: 
+    - ENVOY_UID=0
+    ports:
+    - 8080:8080
+    - 9443:9443
+    - 9901:9901
+    volumes:
+    - ./envoy.yaml:/etc/envoy/envoy.yaml
+    - ./certs:/etc/envoy/certs
+    networks:
+      envoymesh:
+        aliases:
+        - envoy
+    depends_on:
+    - webserver
+
+  webserver:
+    build: SampleApp/
+    environment: 
+    - COLORFUL=blue
+    networks:
+      envoymesh:
+        aliases:
+        - myservice
+        - webservice
+    expose:
+    - 90
+    environment:
+      ASPNETCORE_URLS: "http://+"
+      ASPNETCORE_ENVIRONMENT: "Development"
+networks:
+  envoymesh: {}
