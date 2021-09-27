@@ -19,32 +19,32 @@
               - "*"
               routes:
               - match:
-                  prefix: "/"
+                  prefix: "/api/w"
                 route:
                   auto_host_rewrite: true
-                  prefix_rewrite: /
+                  prefix_rewrite: /Weather
                   cluster: simpleapp
           http_filters:
           - name: envoy.filters.http.router
-      
-      # transport_socket:
-      #   name: envoy.transport_sockets.tls
-      #   typed_config:
-      #     "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
-      #     common_tls_context:
-      #       alpn_protocols:
-      #       - "h2"       
-      #       tls_certificates:             
-      #         certificate_chain:
-      #           filename: "/etc/envoy/certs/server.crt"
-      #         private_key:
-      #           filename: "/etc/envoy/certs/server.key"
+        
+      transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+          common_tls_context:
+            alpn_protocols:
+            - "h2"       
+            tls_certificates:             
+              certificate_chain:
+                filename: "/etc/envoy/certs/server.crt"
+              private_key:
+                filename: "/etc/envoy/certs/server.key"
   clusters:
-  # simapleapp
+ # SimpleApp
   - name: simpleapp
     connect_timeout: 0.25s
     type: STRICT_DNS
-    lb_policy: LEAST_REQUEST
+    lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: simpleapp
       endpoints:
@@ -52,8 +52,12 @@
         - endpoint:
             address:
               socket_address:
-                address: simaple-app
+                address: simpleapp
                 port_value: 80
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext  
 
 admin:
   access_log_path: /tmp/admin_access.log

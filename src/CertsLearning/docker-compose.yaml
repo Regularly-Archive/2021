@@ -1,14 +1,14 @@
 version: '3'
 services:
-  envoy-gateway:
+  envoygateway:
     build: Envoy/
     ports:
-      - "8080:8080"
+      - "9090:9090"
       - "9443:9443"
     volumes:
       - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml:rw
       - ./Envoy/certs:/etc/envoy/certs:rw
-  simple-app:
+  simpleapp:
     build: SampleApp/
     ports:
       - "8082:80"

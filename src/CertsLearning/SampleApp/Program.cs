@@ -25,10 +25,10 @@ namespace SampleApp
                 {
                     webBuilder.ConfigureKestrel(options =>
                     {
-                        options.ConfigureHttpsDefaults(kestrel =>
-                        {
-                            kestrel.ServerCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2("./Certificates/Server.pfx","123456789");
-                        });
+                        //options.ConfigureHttpsDefaults(kestrel =>
+                        //{
+                        //    kestrel.ServerCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2("./Certificates/Server.pfx","123456789");
+                        //});
                     });
 
                     webBuilder.UseStartup<Startup>();
