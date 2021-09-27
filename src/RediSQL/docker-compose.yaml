@@ -1,0 +1,15 @@
+﻿version: "3"
+services:
+  grpc_service:
+    build: GrpcService/GrpcService/
+    ports:
+     - "8082:80"
+    environment:
+      ASPNETCORE_URLS: "http://+"
+      ASPNETCORE_ENVIRONMENT: "Development"
+
+  # grafana
+  grafana:
+    image: redbeardlab/zeesql
+    ports:
+     - "6379:6379"
