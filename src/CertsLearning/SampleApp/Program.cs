@@ -29,8 +29,6 @@ namespace SampleApp
                         {
                             kestrel.ServerCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2("./Certificates/Server.pfx","123456789");
                         });
-
-                        options.Listen(IPAddress.Loopback, 5001, kestrel => kestrel.UseHttps(new X509Certificate2()));
                     });
 
                     webBuilder.UseStartup<Startup>();
