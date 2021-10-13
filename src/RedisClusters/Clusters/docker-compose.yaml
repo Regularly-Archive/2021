@@ -1,0 +1,50 @@
+version: '3.1'
+services:
+  redis1:
+    image: redis:latest
+    container_name: redis-1
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-1/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  redis2:
+    image: redis:latest
+    container_name: redis-2
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-2/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  redis3:
+    image: redis:latest
+    container_name: redis-3
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-3/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  redis4:
+    image: redis:latest
+    container_name: redis-4
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-4/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  redis5:
+    image: redis:latest
+    container_name: redis-5
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-5/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  redis6:
+    image: redis:latest
+    container_name: redis-6
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-6/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
