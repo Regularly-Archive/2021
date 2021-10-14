@@ -1,0 +1,50 @@
+version: '3.1'
+services:
+  redis1:
+    image: redis:latest
+    container_name: redis-master
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-1/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  redis2:
+    image: redis:latest
+    container_name: redis-slave-1
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-2/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  redis3:
+    image: redis:latest
+    container_name: redis-slave-2
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-3/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  sentinel1:
+    image: redis:latest
+    container_name: redis-sentinel-1
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-sentinel-1/redis.conf:/usr/local/etc/redis/sentinel.conf
+    command: ["redis-server", "/usr/local/etc/redis/sentinel.conf"]
+  sentinel2:
+    image: redis:latest
+    container_name: redis-sentinel-2
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-sentinel-2/redis.conf:/usr/local/etc/redis/sentinel.conf
+    command: ["redis-server", "/usr/local/etc/redis/sentinel.conf"]
+  sentinel3:
+    image: redis:latest
+    container_name: redis-sentinel-3
+    restart: always
+    network_mode: "host"
+    volumes:
+      - ./redis-sentinel-3/redis.conf:/usr/local/etc/redis/sentinel.conf
+    command: ["redis-server", "/usr/local/etc/redis/sentinel.conf"]
