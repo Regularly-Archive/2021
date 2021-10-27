@@ -1,0 +1,9 @@
+version: "3"
+services:
+    jupyter:
+        image: jupyter/minimal-notebook
+        container_name: jupyter
+        command: start-notebook.sh
+        ports:
+        - "8777:8888"
+        restart: always
