@@ -41,6 +41,10 @@ namespace ProtobufAny
                 Console.WriteLine(fooResponse.Data.ToObject<Foo>().Name);
                 var barResponse = client.Echo(new AnyRequest() { Data = new Bar { Name = "Bar" }.ToAny() });
                 Console.WriteLine(barResponse.Data.ToObject<Bar>().Name);
+
+                client.Ping(new Foo() { Name = "Foo" }.Pack());
+                client.Ping(new Bar() { Name = "Foo" }.Pack());
+                client.Ping(new { X = 0, Y = 1, Z = 0 }.Pack());
             });
 
             app.UseRouting();

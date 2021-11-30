@@ -38,5 +38,21 @@ namespace ProtobufAny
 
             return base.Echo(request, context);
         }
+
+        public override Task<MyAny> Ping(MyAny request, ServerCallContext context)
+        {
+            if (request.Is<Foo>())
+            {
+                var foo = request.Unpack<Foo>();
+                return Task.FromResult(foo.Pack());
+            } 
+            else if (request.Is<Bar>())
+            {
+                var bar = request.Unpack<Bar>();
+                return Task.FromResult(bar.Pack());
+            }
+
+            return base.Ping(request, context);
+        }
     }
 }

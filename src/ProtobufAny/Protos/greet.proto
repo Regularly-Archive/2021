@@ -10,6 +10,7 @@ service Greeter {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply);
   rpc Echo (AnyRequest) returns (AnyResponse);
+  rpc Ping(MyAny) returns (MyAny);
 }
 
 // The request message containing the user's name.
@@ -36,4 +37,9 @@ message Foo {
 
 message Bar {
 	string Name = 1;
+}
+
+message MyAny {
+	string TypeUrl = 1;
+	bytes Value = 2;
 }
