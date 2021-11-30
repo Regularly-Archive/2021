@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option csharp_namespace = "ProtobufAny";
+import "google/protobuf/any.proto";
+
+package greet;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply);
+  rpc Echo (AnyRequest) returns (AnyResponse);
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings.
+message HelloReply {
+  string message = 1;
+}
+
+message AnyRequest {
+	google.protobuf.Any Data = 1; 
+}
+
+message AnyResponse {
+	google.protobuf.Any Data = 1;
+}
+
+message Foo {
+	string Name = 1;
+}
+
+message Bar {
+	string Name = 1;
+}
