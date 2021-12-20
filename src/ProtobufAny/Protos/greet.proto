@@ -11,6 +11,7 @@ service Greeter {
   rpc SayHello (HelloRequest) returns (HelloReply);
   rpc Echo (AnyRequest) returns (AnyResponse);
   rpc Ping(MyAny) returns (MyAny);
+  rpc Query(QueryRequest) returns (QueryReply);
 }
 
 // The request message containing the user's name.
@@ -42,4 +43,24 @@ message Bar {
 message MyAny {
 	string TypeUrl = 1;
 	bytes Value = 2;
+}
+
+message AlbumProto {
+	int32 AlbumId = 1;
+    string Title = 2;
+    int32 ArtistId = 3;
+}
+
+message ArtistProto {
+   int32 ArtistId = 1;
+   string Name = 2;
+}
+
+message QueryRequest {
+	string InputType = 1;
+	string OutputType = 2;
+}
+
+message QueryReply {
+	repeated MyAny List = 1;
 }

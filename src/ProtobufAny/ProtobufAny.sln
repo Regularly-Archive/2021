@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31402.337
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProtobufAny", "ProtobufAny.csproj", "{608BA6AC-6685-4530-96E4-CC4B80999D07}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicSearch", "..\DynamicSearch\src\DynamicSearch.csproj", "{59DE1222-5330-45AF-BE66-FF24A7504A8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{608BA6AC-6685-4530-96E4-CC4B80999D07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{608BA6AC-6685-4530-96E4-CC4B80999D07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{608BA6AC-6685-4530-96E4-CC4B80999D07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59DE1222-5330-45AF-BE66-FF24A7504A8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59DE1222-5330-45AF-BE66-FF24A7504A8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59DE1222-5330-45AF-BE66-FF24A7504A8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59DE1222-5330-45AF-BE66-FF24A7504A8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

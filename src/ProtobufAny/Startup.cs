@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProtobufAny.Database;
+using ProtobufAny.Database.Models;
 using ProtobufAny.Extensions;
 
 namespace ProtobufAny
@@ -19,6 +22,8 @@ namespace ProtobufAny
         {
             services.AddGrpc();
             services.AddGrpcReflection();
+            services.AddDbContext<ChinookContext>(options => options.UseSqlite("Data Source=Chinook.db"));
+            services.AddScoped<QueryService>();
 
             services.AddGrpcClient<ProtobufAny.Greeter.GreeterClient>(opt =>
             {
@@ -44,7 +49,13 @@ namespace ProtobufAny
 
                 client.Ping(new Foo() { Name = "Foo" }.Pack());
                 client.Ping(new Bar() { Name = "Foo" }.Pack());
-                client.Ping(new { X = 0, Y = 1, Z = 0 }.Pack());
+                //client.Ping(new { X = 0, Y = 1, Z = 0 }.Pack());
+
+                var reply = client.Query(new QueryRequest()
+                {
+                    InputType = typeof(Album).FullName,
+                    OutputType = typeof(AlbumProto).FullName
+                });
             });
 
             app.UseRouting();
