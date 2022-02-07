@@ -26,6 +26,8 @@ namespace WeatherService.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            var redirectUrl = Request.Query["url"];
+            redirectUrl = System.Net.WebUtility.UrlDecode(redirectUrl);
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

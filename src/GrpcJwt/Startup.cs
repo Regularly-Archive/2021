@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using GrpcJwt.Hubs;
 using GrpcJwt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -60,7 +62,21 @@ namespace GrpcJwt
                     ValidateIssuer = true,
                     ValidateAudience = true,
                 };
+
+                x.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/echohub")))
+                            context.Token = accessToken;
+                        return Task.CompletedTask;
+                    }
+                };
             });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,6 +96,16 @@ namespace GrpcJwt
 
             app.UseRouting();
 
+            app.Use((context, next) =>
+            {
+                var accessToken = context.Request.Query["access_token"].ToString();
+                var path = context.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/echohub")))
+                    context.Request.Headers.Add("Authorization", new StringValues($"Bearer {accessToken}"));
+
+                return next.Invoke();
+            });
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -87,6 +113,7 @@ namespace GrpcJwt
             {
                 endpoints.MapGrpcService<GreeterService>();
                 endpoints.MapControllers();
+                endpoints.MapHub<EchoHub>("/echohub");
 
                 endpoints.MapGet("/", async context =>
                 {

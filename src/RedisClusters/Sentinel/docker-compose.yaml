@@ -24,3 +24,12 @@ services:
     volumes:
       - ./redis-3/redis.conf:/usr/local/etc/redis/redis.conf
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  sentinel1:
+    image: redis
+    container_name: redis-sentinel-1
+    command: ["redis-sentinel", "/usr/local/etc/redis/sentinel.conf"]
+    restart: always
+    ports:
+      - 26379:26379
+    volumes:
+      - ./redis-sentinel-1/sentinel.conf:/usr/local/etc/redis/sentinel.conf
